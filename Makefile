@@ -14,11 +14,11 @@ NAME = ft_nmap
 
 CC = clang
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = #-Wall -Werror -Wextra
 
 SRC_PATH = ./srcs/
 
-SRC_NAME = 
+SRC_NAME = main.c
 
 OBJ_PATH = ./obj/
 
