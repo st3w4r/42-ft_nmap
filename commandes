@@ -1,0 +1,4 @@
+tcpdump -vvv -l -X -n icmp
+
+docker build -t ft_nmap .
+docker run -it --rm -v /Users/Shared/ft_nmap:/ft_nmap ft_nmap /bin/bash
