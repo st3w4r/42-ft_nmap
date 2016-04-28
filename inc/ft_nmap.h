@@ -4,6 +4,7 @@
 # include "libft.h"
 # include <stdio.h>
 # include <stdlib.h>
+# include <pcap.h>
 
 
 typedef struct   s_arg
