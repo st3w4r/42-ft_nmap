@@ -18,7 +18,7 @@ CFLAGS = -Wall -Werror -Wextra
 
 SRC_PATH = ./srcs/
 
-SRC_NAME = main.c parser.c
+SRC_NAME = main.c parser.c init_options.c
 
 OBJ_PATH = ./obj/
 

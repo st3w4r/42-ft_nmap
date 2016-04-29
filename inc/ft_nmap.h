@@ -24,18 +24,29 @@ enum    e_flags
 typedef struct   s_struct
 {
   int flags;
+  char *argtmp;
+  int (*ptr_init_fun[11]) ();
 }                t_struct;
 
 t_struct g_struct;
 
 /* Parser.c */
-int       nm_argv_parser(char **argv, int *flags);
-void      nm_usage();
+int       nm_cmp_args(char *argv, char **tabargs);
+int       nm_check_args(char *str, char **tabargs);
+int       nm_argv_parser(char **argv);
 char**    nm_get_args();
-int       nm_cmp_args(char *argv, char **tabargs, int *flags);
-void      nm_check_args(int *flags);
+void      nm_usage();
 
-
+int nm_init_ports_opt();
+int nm_init_ip_opt();
+int nm_init_file_opt();
+int nm_init_speedup_opt();
+int nm_init_scan_opt();
+int nm_init_spoof_opt();
+int nm_init_ttl_opt();
+int nm_init_o_opt();
+int nm_init_s_opt();
+int nm_init_g_opt();
 
 
 #endif

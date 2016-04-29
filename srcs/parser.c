@@ -3,98 +3,52 @@
 // ft_nmap [--help] [--ports [NOMBRE/PLAGE]] --ip ADRESSE IP [--speedup [NOMBRE]] [--scan [TYPE]]
 // ou
 // $> ft_nmap [--help] [--ports [NOMBRE/PLAGE]] --file FICHIER [--speedup [NOMBRE]] [--scan [TYPE]]
-
-int             nm_argv_parser(char **argv, int *flags)
+void printBits(int num)
 {
-  int i;
-  char **tabargs;
+  for(int bit = 0; bit < ((int)sizeof(int) * 8); bit++)
+  {
+    printf("%i ", num & 0x01);
+    num = num >> 1;
+  }
+}
 
+int             nm_argv_parser(char **argv)
+{
+  char **tabargs;
+  int i;
+  int argtype;
+
+  argtype       = 0;
   i             = 1;
   tabargs       = nm_get_args();
-  while (argv[i] != NULL)
+  while (argv[i])
   {
-    if (nm_cmp_args(argv[i], tabargs, flags) == -1)
+    argtype = strncmp(argv[i], "--", 2) == 0 ? 1 : 0;
+    g_struct.argtmp = argtype == 1 ? argv[i + 1] : NULL;
+    if (nm_check_args(argv[i], tabargs) == 0)
     {
-      printf("nmap: illegal option: %s\n", argv[i]);
-      nm_usage();
-      free(tabargs);
-      return (-1);
+      argtype == 1 ? i++ : 0;
+      printf("argv[%d] %s\n", i, argv[i]);
     }
     i++;
   }
-  free(tabargs);
-  nm_check_args(flags);
+  printBits(g_struct.flags);
   return (0);
 }
-void printBits(int num)
+
+
+int             nm_check_args(char *src, char **tabargs)
 {
-   for(int bit=0;bit<((int)sizeof(int) * 8); bit++)
-   {
-      printf("%i ", num & 0x01);
-      num = num >> 1;
-   }
+  if (nm_cmp_args(src, tabargs) == -1)
+  {
+    printf("nmap: illegal option: %s\n", src);
+    nm_usage();
+    return (-1);
+  }
+  return (0);
 }
 
-void            nm_check_args(int *flags)
-{
-  printBits(*flags);
-  if ( HELP_F & *flags)
-  {
-    printf("HELP\n");
-  }
-  if (*flags & PORTS_F)
-  {
-    printf("PORTS\n");
-
-  }
-  if (*flags & IP_F)
-  {
-    printf("IP\n");
-
-  }
-  if (*flags & FILE_F)
-  {
-    printf("FILE\n");
-
-  }
-  if (*flags & SPEEDUP_F)
-  {
-    printf("SPEED\n");
-
-  }
-  if (*flags & SCAN_F)
-  {
-    printf("SCAN\n");
-
-  }
-  if (*flags & SPOOFMAC_F)
-  {
-    printf("SPOOF\n");
-
-  }
-  if (*flags & TTL_F)
-  {
-    printf("TTL\n");
-
-  }
-  if (*flags & O_F)
-  {
-    printf("OF\n");
-
-  }
-  if (*flags & S_F)
-  {
-    printf("SF\n");
-
-  }
-  if (*flags & G_F)
-  {
-    printf("GF\n");
-
-  }
-}
-
-int             nm_cmp_args(char *argv, char **tabargs, int *flags)
+int             nm_cmp_args(char *argv, char **tabargs)
 {
   char *str;
   int i;
@@ -105,7 +59,8 @@ int             nm_cmp_args(char *argv, char **tabargs, int *flags)
   {
     if (ft_strcmp(tabargs[i], str) == 0)
     {
-      *flags |= 1 << i;
+      g_struct.flags |= 1 << i;
+      g_struct.ptr_init_fun[i]();
       return (0);
     }
     i++;
