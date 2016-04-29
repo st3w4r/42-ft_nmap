@@ -6,7 +6,7 @@
 #    By: snettah <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/26 12:01:48 by snettah           #+#    #+#              #
-#    Updated: 2016/01/08 15:01:46 by snettah          ###   ########.fr        #
+#    Updated: 2016/04/29 15:28:40 by ybarbier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,11 +14,13 @@ NAME = ft_nmap
 
 CC = clang
 
-CFLAGS = -Wall -Werror -Wextra
+#CFLAGS = -Wall -Werror -Wextra
 
 SRC_PATH = ./srcs/
 
-SRC_NAME = main.c parser.c
+SRC_NAME =	main.c \
+			parser.c \
+			services.c
 
 OBJ_PATH = ./obj/
 
@@ -36,10 +38,10 @@ SRC = $(addprefix $(SRC_PATH),$(SRC_NAME))
 OBJ = $(addprefix $(OBJ_PATH),$(OBJ_NAME))
 LIB = $(addprefix $(LIB_PATH),$(LIB_NAME))
 
-COMPILE = echo "\033[36mCompile ...."
-COMPILED = echo "\033[32mCompiled Successfully"
-CLEAN = echo "\033[38mClean ...."
-CLEANED = echo "\033[32mCleaned Successfully"
+COMPILE = echo "\033[36mCompile ....\033[0m"
+COMPILED = echo "\033[32mCompiled Successfully\033[0m"
+CLEAN = echo "\033[38mClean ....\033[0m"
+CLEANED = echo "\033[32mCleaned Successfully\033[0m"
 
 all: libmake $(NAME)
 
