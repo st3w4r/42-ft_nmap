@@ -14,7 +14,7 @@ NAME = ft_nmap
 
 CC = clang
 
-CFLAGS = #-Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra
 
 SRC_PATH = ./srcs/
 

@@ -4,18 +4,14 @@
 // ou
 // $> ft_nmap [--help] [--ports [NOMBRE/PLAGE]] --file FICHIER [--speedup [NOMBRE]] [--scan [TYPE]]
 
-
-
-int       parser(char **argv, t_arg *g_arg)
+int       parser(char **argv, int *flags)
 {
   int i;
-
   i       = 1;
+
   while (argv[i] != NULL)
   {
-    if (ft_strncmp(argv[i], "--", 2) == 0)
-      printf("argv %d %s\n", i, argv[i]);
-    else
+    if (check_args(argv[i], flags) != 0)
     {
       usage();
       return (-1);
@@ -23,6 +19,50 @@ int       parser(char **argv, t_arg *g_arg)
     i++;
   }
   return (0);
+}
+
+
+int      check_args(char *argv, int *flags)
+{
+  char *str;
+  char **tabargs;
+  int i;
+
+  i       = 0;
+  tabargs = get_tabargs();
+  str     = strncmp(argv, "--", 2) == 0 ? argv + 2 : argv + 1;
+  while (tabargs[i])
+  {
+    if (ft_strcmp(tabargs[i], str) == 0)
+    {
+      printf("tabargs: %d %s\n", i, str);
+      *flags |= i;
+    }
+    i++;
+  }
+  free(tabargs);
+  return (0);
+}
+
+char**               get_tabargs()
+{
+  char **tabargs;
+
+  tabargs      = (char **)malloc(sizeof(12));
+  tabargs[0]   = "help";
+  tabargs[1]   = "ports";
+  tabargs[2]   = "ip";
+  tabargs[3]   = "file";
+  tabargs[4]   = "speedup";
+  tabargs[5]   = "scan";
+  tabargs[6]   = "spoof-mac";
+  tabargs[7]   = "ttl";
+  tabargs[8]   = "O";
+  tabargs[9]   = "S";
+  tabargs[10]  = "g";
+  tabargs[11]  = NULL;
+
+  return tabargs;
 }
 
 void      usage()
