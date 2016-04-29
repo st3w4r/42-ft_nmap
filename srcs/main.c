@@ -5,10 +5,10 @@ int               main(int argc, char **argv)
 {
 
   (void)argc;
-  g_struct         = (t_struct *)malloc(sizeof(t_struct));
-  g_struct->flags = 0;
+  // g_struct         = (t_struct *)malloc(sizeof(t_struct));
+  g_struct.flags = 0x0;
 
-  parser(argv, &g_struct->flags);
+  nm_argv_parser(argv, &g_struct.flags);
 
   return (0);
 }

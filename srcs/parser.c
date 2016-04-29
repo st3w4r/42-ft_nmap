@@ -4,30 +4,97 @@
 // ou
 // $> ft_nmap [--help] [--ports [NOMBRE/PLAGE]] --file FICHIER [--speedup [NOMBRE]] [--scan [TYPE]]
 
-int             parser(char **argv, int *flags)
+int             nm_argv_parser(char **argv, int *flags)
 {
   int i;
   char **tabargs;
 
   i             = 1;
-  tabargs       = get_tabargs();
+  tabargs       = nm_get_args();
   while (argv[i] != NULL)
   {
-    if (check_args(argv[i], tabargs, flags) == -1)
+    if (nm_cmp_args(argv[i], tabargs, flags) == -1)
     {
       printf("nmap: illegal option: %s\n", argv[i]);
-      usage();
+      nm_usage();
       free(tabargs);
       return (-1);
     }
     i++;
   }
   free(tabargs);
+  nm_check_args(flags);
   return (0);
 }
+void printBits(int num)
+{
+   for(int bit=0;bit<((int)sizeof(int) * 8); bit++)
+   {
+      printf("%i ", num & 0x01);
+      num = num >> 1;
+   }
+}
 
+void            nm_check_args(int *flags)
+{
+  printBits(*flags);
+  if ( HELP_F & *flags)
+  {
+    printf("HELP\n");
+  }
+  if (*flags & PORTS_F)
+  {
+    printf("PORTS\n");
 
-int             check_args(char *argv, char **tabargs, int *flags)
+  }
+  if (*flags & IP_F)
+  {
+    printf("IP\n");
+
+  }
+  if (*flags & FILE_F)
+  {
+    printf("FILE\n");
+
+  }
+  if (*flags & SPEEDUP_F)
+  {
+    printf("SPEED\n");
+
+  }
+  if (*flags & SCAN_F)
+  {
+    printf("SCAN\n");
+
+  }
+  if (*flags & SPOOFMAC_F)
+  {
+    printf("SPOOF\n");
+
+  }
+  if (*flags & TTL_F)
+  {
+    printf("TTL\n");
+
+  }
+  if (*flags & O_F)
+  {
+    printf("OF\n");
+
+  }
+  if (*flags & S_F)
+  {
+    printf("SF\n");
+
+  }
+  if (*flags & G_F)
+  {
+    printf("GF\n");
+
+  }
+}
+
+int             nm_cmp_args(char *argv, char **tabargs, int *flags)
 {
   char *str;
   int i;
@@ -38,7 +105,7 @@ int             check_args(char *argv, char **tabargs, int *flags)
   {
     if (ft_strcmp(tabargs[i], str) == 0)
     {
-      *flags |= i;
+      *flags |= 1 << i;
       return (0);
     }
     i++;
@@ -46,7 +113,7 @@ int             check_args(char *argv, char **tabargs, int *flags)
   return (-1);
 }
 
-char**          get_tabargs()
+char**          nm_get_args()
 {
   char **tabargs;
 
@@ -67,7 +134,7 @@ char**          get_tabargs()
   return tabargs;
 }
 
-void            usage()
+void            nm_usage()
 {
   printf("\nft_nmap [OPTIONS]\n");
   printf("--help Print this help screen\n");

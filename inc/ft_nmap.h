@@ -26,13 +26,14 @@ typedef struct   s_struct
   int flags;
 }                t_struct;
 
-t_struct *g_struct;
+t_struct g_struct;
 
 /* Parser.c */
-int       parser(char **argv, int *flags);
-void      usage();
-char**    get_tabargs();
-int       check_args(char *argv, char **tabargs, int *flags);
+int       nm_argv_parser(char **argv, int *flags);
+void      nm_usage();
+char**    nm_get_args();
+int       nm_cmp_args(char *argv, char **tabargs, int *flags);
+void      nm_check_args(int *flags);
 
 
 
