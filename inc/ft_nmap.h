@@ -31,22 +31,24 @@ typedef struct   s_struct
 t_struct g_struct;
 
 /* Parser.c */
-int       nm_cmp_args(char *argv, char **tabargs);
-int       nm_check_args(char *str, char **tabargs);
-int       nm_argv_parser(char **argv);
+int       nm_cmp_args(char *arg, char **tabargs, int argtype);
+int       nm_arg_error(char *arg);
+int       nm_argv_parser(char **argv, int argc);
 char**    nm_get_args();
-void      nm_usage();
+int       nm_arg_type(char *arg);
+int       nm_init_fun(char *arg, int opt, int argtype);
+int       nm_usage();
 
-int nm_init_ports_opt();
-int nm_init_ip_opt();
-int nm_init_file_opt();
-int nm_init_speedup_opt();
-int nm_init_scan_opt();
-int nm_init_spoof_opt();
-int nm_init_ttl_opt();
-int nm_init_o_opt();
-int nm_init_s_opt();
-int nm_init_g_opt();
+int nm_init_ports_opt(char *arg);
+int nm_init_ip_opt(char *arg);
+int nm_init_file_opt(char *arg);
+int nm_init_speedup_opt(char *arg);
+int nm_init_scan_opt(char *arg);
+int nm_init_spoof_opt(char *arg);
+int nm_init_ttl_opt(char *arg);
+int nm_init_o_opt(char *arg);
+int nm_init_s_opt(char *arg);
+int nm_init_g_opt(char *arg);
 
 
 #endif
