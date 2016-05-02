@@ -3,7 +3,6 @@
 
 # include "libft.h"
 # include <stdio.h>
-# include <stdlib.h>
 # include <pcap.h>
 
 enum    e_flags
@@ -21,10 +20,11 @@ enum    e_flags
   G_F = 1 << 10
 };
 
+
 typedef struct   s_struct
 {
   int flags;
-  char *argtmp;
+  int **ports;
   int (*ptr_init_fun[11]) ();
 }                t_struct;
 

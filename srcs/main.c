@@ -6,6 +6,8 @@ int               main(int argc, char **argv)
 
   (void)argc;
   // g_struct         = (t_struct *)malloc(sizeof(t_struct));
+  char *str = ft_strdup("Salut");
+
   g_struct.flags = 0x0;
 
   g_struct.ptr_init_fun[0] = nm_usage;

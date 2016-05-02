@@ -26,7 +26,7 @@ int             nm_argv_parser(char **argv, int argc)
       return (nm_arg_error(argv[i]));
     i += argtype;
   }
-  free(tabargs);
+  // free(tabargs);
   return (0);
 }
 
@@ -72,8 +72,6 @@ int             nm_arg_error(char *arg)
   nm_usage();
   return (-1);
 }
-
-
 /* nm_cmp_args
 ** Retourne l'index de la fonction a initialiser
 ** Si non -1 en cas d'erreur (mauvaise arguments dans la ligne de commande)
@@ -86,6 +84,7 @@ int             nm_cmp_args(char *arg, char **tabargs)
   i             = 0;
   while (tabargs[i])
   {
+    printf("tabargs: %s, arg: %s\n", tabargs[i], arg);
     if (ft_strcmp(tabargs[i], arg) == 0)
       return (i);
     i++;
@@ -97,21 +96,21 @@ char**          nm_get_args()
 {
   char **tabargs;
 
-  tabargs       = (char **)malloc(sizeof(12));
-  tabargs[0]    = "--help";
-  tabargs[1]    = "--ports";
-  tabargs[2]    = "--ip";
-  tabargs[3]    = "--file";
-  tabargs[4]    = "--speedup";
-  tabargs[5]    = "--scan";
-  tabargs[6]    = "--spoof-mac";
-  tabargs[7]    = "--ttl";
-  tabargs[8]    = "-O";
-  tabargs[9]    = "-S";
-  tabargs[10]   = "-g";
+  tabargs       = (char **)malloc(sizeof(char *) * 12);
+  tabargs[0]    = ft_strdup("--help");
+  tabargs[1]    = ft_strdup("--ports");
+  tabargs[2]    = ft_strdup("--ip");
+  tabargs[3]    = ft_strdup("--file");
+  tabargs[4]    = ft_strdup("--speedup");
+  tabargs[5]    = ft_strdup("--scan");
+  tabargs[6]    = ft_strdup("--spoof-mac");
+  tabargs[7]    = ft_strdup("--ttl");
+  tabargs[8]    = ft_strdup("-O");
+  tabargs[9]    = ft_strdup("-S");
+  tabargs[10]   = ft_strdup("-g");
   tabargs[11]   = NULL;
 
-  return tabargs;
+  return (tabargs);
 }
 
 int            nm_usage()
