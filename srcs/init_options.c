@@ -27,13 +27,7 @@ int nm_init_speedup_opt(char *arg)
     g_struct.speedup = speedup;
   return (0);
 }
-int nm_init_scan_opt(char *arg)
-{
-  ft_putstr("nm_init_scan_opt\n");
-  printf("argtype: %s\n", arg);
 
-  return (0);
-}
 int nm_init_spoof_opt(char *arg)
 {
   ft_putstr("nm_init_spoof_opt\n");
@@ -45,7 +39,15 @@ int nm_init_ttl_opt(char *arg)
 {
   ft_putstr("nm_init_ttl_opt\n");
   printf("argtype: %s\n", arg);
+  int ttl;
 
+  if (!ft_is_number(arg))
+    return (-1);
+  ttl = ft_atoi(arg);
+  if (ttl < 1 || ttl > 255)
+    return (-1);
+  else
+    g_struct.ttl = ttl;
   return (0);
 }
 int nm_init_o_opt(char *arg)

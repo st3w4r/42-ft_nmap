@@ -1,8 +1,5 @@
 #include "ft_nmap.h"
 
-// ft_nmap [--help] [--ports [NOMBRE/PLAGE]] --ip ADRESSE IP [--speedup [NOMBRE]] [--scan [TYPE]]
-// ou
-// $> ft_nmap [--help] [--ports [NOMBRE/PLAGE]] --file FICHIER [--speedup [NOMBRE]] [--scan [TYPE]]
 int             nm_argv_parser(char **argv, int argc)
 {
   char **tabargs;

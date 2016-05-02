@@ -32,6 +32,16 @@ enum    e_flags
 	G_F = 1 << 10
 };
 
+enum    e_scan_types
+{
+  SYN_F = 1 << 0,
+	NULL_F = 1 << 1,
+	FUN_F = 1 << 2,
+	XMAS_F = 1 << 3,
+	ACK_F = 1 << 4,
+	UDP_F = 1 << 5,
+};
+
 typedef struct	s_service
 {
   char			*name;
@@ -44,6 +54,8 @@ typedef struct   s_struct
   int flags;
   int *ports;
   int speedup;
+  int types;
+  int ttl;
   int (*ptr_init_fun[11]) ();
   t_list	*ip_store;
 }                t_struct;
