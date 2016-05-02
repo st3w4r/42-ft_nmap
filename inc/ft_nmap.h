@@ -44,6 +44,7 @@ typedef struct   s_struct
 {
   int flags;
   int *ports;
+  int speedup;
   int (*ptr_init_fun[11]) ();
   t_list	*ip_store;
 }                t_struct;
