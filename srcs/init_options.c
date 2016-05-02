@@ -16,9 +16,15 @@ int nm_init_file_opt(char *arg)
 }
 int nm_init_speedup_opt(char *arg)
 {
-  ft_putstr("nm_init_speedup_opt\n");
-  printf("argtype: %s\n", arg);
+  int speedup;
 
+  if (!ft_is_number(arg))
+    return (-1);
+  speedup = ft_atoi(arg);
+  if (speedup < 1 || speedup > 250)
+    return (-1);
+  else
+    g_struct.speedup = speedup;
   return (0);
 }
 int nm_init_scan_opt(char *arg)
