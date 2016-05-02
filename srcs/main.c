@@ -49,7 +49,14 @@ void test_ip_v4()
 	}
 }
 
-/* Ne pas oublier de remettre les Flags */
+void print_ip_store(t_list *elem)
+{
+	printf("IP: %s\n", elem->content);
+}
+
+/* 
+	i
+ pas oublier de remettre les Flags */
 int               main(int argc, char **argv)
 {
 
@@ -73,5 +80,6 @@ int               main(int argc, char **argv)
 
   nm_argv_parser(argv, argc);
 
+  ft_lstiter(g_struct.ip_store, print_ip_store);
   return (0);
 }

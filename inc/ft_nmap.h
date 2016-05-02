@@ -81,6 +81,7 @@ char	*nm_get_service_name(int port, char *protocol);
  ** Name: helper.c
  ** Desc: Helper function
  */
+void	nm_add_ip_to_ip_store(char *ip);
 void	nm_get_ip_file(char *file);
 t_bool	nm_check_ip_v4(char *ip);
 
