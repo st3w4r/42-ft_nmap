@@ -17,13 +17,6 @@ typedef unsigned int	t_uint;
 # define TRUE 1
 # define FALSE 0
 */
-typedef struct	s_service
-{
-	char			*name;
-	unsigned int	port;
-	char			*protocol;
-}				t_service;
-
 enum    e_flags
 {
 	HELP_F = 1 << 0,
@@ -39,6 +32,12 @@ enum    e_flags
 	G_F = 1 << 10
 };
 
+typedef struct	s_service
+{
+  char			*name;
+  unsigned int	port;
+  char			*protocol;
+}				t_service;
 
 typedef struct   s_struct
 {
