@@ -9,14 +9,8 @@
 # include <sys/uio.h>
 # include <unistd.h>
 # include <pcap.h>
+# include <arpa/inet.h>
 
-/*
-typedef unsigned char	t_bool;
-typedef unsigned int	t_uint;
-
-# define TRUE 1
-# define FALSE 0
-*/
 typedef struct	s_service
 {
 	char			*name;
