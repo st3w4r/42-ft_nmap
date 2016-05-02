@@ -1,6 +1,6 @@
 #include "ft_nmap.h"
 
-char	*get_service_name(int port, char *protocol)
+char	*nm_get_service_name(int port, char *protocol)
 {
 	int	i;
 	t_service	services_list[]  =

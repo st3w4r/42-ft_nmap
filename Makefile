@@ -6,7 +6,7 @@
 #    By: snettah <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/26 12:01:48 by snettah           #+#    #+#              #
-#    Updated: 2016/04/29 15:28:40 by ybarbier         ###   ########.fr        #
+#    Updated: 2016/05/02 14:16:37 by ybarbier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,13 +20,22 @@ SRC_PATH = ./srcs/
 
 SRC_NAME =	main.c \
 			parser.c \
-			services.c
+			services.c \
+			init_options.c \
+			helper.c
+
+OBJ_PATH = ./obj/
+
+OBJ_NAME = $(SRC_NAME:.c=.o)
+
 
 OBJ_PATH = ./obj/
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 
 INC_PATH = ./inc/
+
+INC_PATH_LIBFT = ./libft/includes
 
 LIB_PATH = ./libft/
 
@@ -47,7 +56,7 @@ all: libmake $(NAME)
 
 $(NAME): $(OBJ) $(LIB)
 	@$(COMPILE)
-	@$(CC) $(CFLAGS) -o $(NAME) -I$(INC_PATH) \
+	@$(CC) $(CFLAGS) -o $(NAME) -I$(INC_PATH) -I$(INC_PATH_LIBFT) \
 		$(LIB) $(OBJ) $(LIB)
 	@$(COMPILED)
 
@@ -56,7 +65,7 @@ libmake:
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@mkdir $(OBJ_PATH) 2> /dev/null || echo '' > /dev/null
-	@$(CC) $(CFLAGS) -o $@ -I$(INC_PATH) -c $<
+	@$(CC) $(CFLAGS) -o $@ -I$(INC_PATH) -I$(INC_PATH_LIBFT) -c $<
 
 clean: libclean
 	@$(CLEAN)

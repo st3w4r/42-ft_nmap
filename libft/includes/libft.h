@@ -6,7 +6,7 @@
 /*   By: snettah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/04 14:02:33 by snettah           #+#    #+#             */
-/*   Updated: 2015/03/19 12:19:34 by snettah          ###   ########.fr       */
+/*   Updated: 2016/05/02 14:00:22 by ybarbier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,13 @@
 # include <string.h>
 # include <unistd.h>
 # define BUFF_SIZE 32
+
+# define TRUE 1
+# define FALSE 0
+
+typedef unsigned char	t_bool;
+typedef unsigned int	t_uint;
+
 
 typedef struct		s_list
 {
@@ -108,4 +115,7 @@ void				btree_insert_data(t_btree **root, void *item, int (*f)(
 void				btree_apply_infix(t_btree *root, void (*f)(void *));
 void				btree_apply_prefix(t_btree *root, void (*f)(void *));
 char				*ft_ltrim(char const *s);
+t_bool				ft_is_number(char *number);
+void				ft_arrfree(char ***arr);
+t_uint				ft_arrlen(char **arr);
 #endif

@@ -6,6 +6,13 @@
 # include <stdlib.h>
 # include <pcap.h>
 
+/*
+typedef unsigned char	t_bool;
+typedef unsigned int	t_uint;
+
+# define TRUE 1
+# define FALSE 0
+*/
 typedef struct	s_service
 {
 	char			*name;
@@ -28,31 +35,43 @@ enum    e_flags
 	G_F = 1 << 10
 };
 
-typedef struct   s_arg_value
-{
-	char *arg;
-	int value;
-	struct s_arg_value *next;
-}               t_arg_value;
-// struct s_arg_value *head;
-
 typedef struct   s_struct
 {
-	int flags;
+  int flags;
+  char *argtmp;
+  int (*ptr_init_fun[11]) ();
 }                t_struct;
 
-t_struct *g_struct;
+t_struct g_struct;
 
 /* Parser.c */
-int       parser(char **argv, int *flags);
-void      usage();
-char**    get_tabargs();
-int       check_args(char *argv, int *flags);
+int       nm_cmp_args(char *argv, char **tabargs);
+int       nm_check_args(char *str, char **tabargs);
+int       nm_argv_parser(char **argv);
+char**    nm_get_args();
+void      nm_usage();
+
+int nm_init_ports_opt();
+int nm_init_ip_opt();
+int nm_init_file_opt();
+int nm_init_speedup_opt();
+int nm_init_scan_opt();
+int nm_init_spoof_opt();
+int nm_init_ttl_opt();
+int nm_init_o_opt();
+int nm_init_s_opt();
+int nm_init_g_opt();
 
 /**
  ** Name: services.c
  ** Desc: Detect the service
  */
-char	*get_service_name(int port, char *protocol);
+char	*nm_get_service_name(int port, char *protocol);
+
+/**
+ ** Name: helper.c
+ ** Desc: Helper function
+ */
+t_bool	nm_check_ip_v4(char *ip);
 
 #endif

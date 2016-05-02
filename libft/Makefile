@@ -6,7 +6,7 @@
 #    By: snettah <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/06 18:52:02 by snettah           #+#    #+#              #
-#    Updated: 2016/01/06 19:25:22 by snettah          ###   ########.fr        #
+#    Updated: 2016/05/02 13:50:41 by ybarbier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,8 @@ SOURCES = ft_strlen.c ft_strdup.c ft_strcpy.c ft_strncpy.c ft_tolower.c \
 		  ft_push_back.c ft_list_last.c btree_create_node.c \
 		  btree_apply_prefix.c btree_apply_infix.c btree_insert_data.c \
 		  ft_nbrendl.c ft_tablen.c get_next_line.c ft_isblank.c ft_ltrim.c \
-		  ft_epur_str.c ft_add_to_tab.c
+		  ft_epur_str.c ft_add_to_tab.c ft_arrlen.c ft_arrfree.c \
+		  ft_is_number.c
 
 SRCS = $(addprefix srcs/, $(SOURCES))
 
