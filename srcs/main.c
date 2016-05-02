@@ -55,8 +55,11 @@ int               main(int argc, char **argv)
 
   (void)argc;
   // g_struct         = (t_struct *)malloc(sizeof(t_struct));
+  char *str = ft_strdup("Salut");
+
   g_struct.flags = 0x0;
 
+  g_struct.ptr_init_fun[0] = nm_usage;
   g_struct.ptr_init_fun[1] = nm_init_ports_opt;
   g_struct.ptr_init_fun[2] = nm_init_ip_opt;
   g_struct.ptr_init_fun[3] = nm_init_file_opt;
@@ -68,21 +71,7 @@ int               main(int argc, char **argv)
   g_struct.ptr_init_fun[9] = nm_init_s_opt;
   g_struct.ptr_init_fun[10] = nm_init_g_opt;
 
-  // tabargs[0]    = "help";
-  // tabargs[1]    = "ports";
-  // tabargs[2]    = "ip";
-  // tabargs[3]    = "file";
-  // tabargs[4]    = "speedup";
-  // tabargs[5]    = "scan";
-  // tabargs[6]    = "spoof-mac";
-  // tabargs[7]    = "ttl";
-  // tabargs[8]    = "O";
-  // tabargs[9]    = "S";
-  // tabargs[10]   = "g";
-//  nm_argv_parser(argv);
-
-  test_ip_v4();
-  nm_get_ip_file("ip_list");
+  nm_argv_parser(argv, argc);
 
   return (0);
 }

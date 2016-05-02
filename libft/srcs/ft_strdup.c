@@ -25,7 +25,7 @@ char			*ft_strdup(char *s1)
 	cpy = (char*)malloc(sizeof(char) * size + 1);
 	if (!cpy)
 		return (NULL);
-	while (s1[i])
+	while (s1[i] != '\0')
 	{
 		cpy[i] = s1[i];
 		i++;
