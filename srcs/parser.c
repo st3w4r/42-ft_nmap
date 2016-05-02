@@ -3,15 +3,6 @@
 // ft_nmap [--help] [--ports [NOMBRE/PLAGE]] --ip ADRESSE IP [--speedup [NOMBRE]] [--scan [TYPE]]
 // ou
 // $> ft_nmap [--help] [--ports [NOMBRE/PLAGE]] --file FICHIER [--speedup [NOMBRE]] [--scan [TYPE]]
-void printBits(int num)
-{
-  for(int bit = 0; bit < ((int)sizeof(int) * 8); bit++)
-  {
-    printf("%i ", num & 0x01);
-    num = num >> 1;
-  }
-}
-
 int             nm_argv_parser(char **argv, int argc)
 {
   char **tabargs;
@@ -26,8 +17,11 @@ int             nm_argv_parser(char **argv, int argc)
   while (i < argc)
   {
     argtype = nm_arg_type(argv[i]);
-    if ((opt = nm_cmp_args(argv[i], tabargs, argtype)) > -1)
-      nm_init_fun(argv[i + 1], opt, argtype);
+    if ((opt = nm_cmp_args(argv[i], tabargs)) > -1)
+    {
+      if (nm_init_fun(argv[i + 1], opt, argtype, tabargs) == -1)
+        return (-1);
+    }
     else
       return (nm_arg_error(argv[i]));
     i += argtype;
@@ -36,6 +30,11 @@ int             nm_argv_parser(char **argv, int argc)
   return (0);
 }
 
+/* nm_arg_type
+** retourne le type d'argument
+** avec une optione commencant par -- est suivis d'un argument
+** une option avec - n'a pas d'argument
+*/
 int             nm_arg_type(char *arg)
 {
   if (strncmp(arg, "--", 2) == 0)
@@ -46,8 +45,18 @@ int             nm_arg_type(char *arg)
     return (0);
 }
 
-int           nm_init_fun(char *arg, int opt, int argtype)
+/** execute la fonction approprie a l'argument
+** si argtype == 2 (ex: --scan)
+** elle execute la fonction avec l'argument suivant l'option
+** ex: --scan UDP -> ptr_init_fun(UDP)
+*/
+int           nm_init_fun(char *arg, int opt, int argtype, char **tabargs)
 {
+  if (arg && nm_arg_type(arg) != 0)
+  {
+    printf("Error: %s missing argument\n", tabargs[opt]);
+    return (-1);
+  }
   g_struct.flags |= 1 << opt;
   if (argtype == 2)
     return (g_struct.ptr_init_fun[opt](arg));
@@ -62,14 +71,17 @@ int             nm_arg_error(char *arg)
   return (-1);
 }
 
-int             nm_cmp_args(char *arg, char **tabargs, int argtype)
+
+/* nm_cmp_args
+** Retourne l'index de la fonction a initialiser
+** Si non -1 en cas d'erreur (mauvaise arguments dans la ligne de commande)
+*/
+
+int             nm_cmp_args(char *arg, char **tabargs)
 {
-  // char *str;
   int i;
 
-  (void)argtype;
   i             = 0;
-  // str           = arg + argtype;
   while (tabargs[i])
   {
     if (ft_strcmp(tabargs[i], arg) == 0)

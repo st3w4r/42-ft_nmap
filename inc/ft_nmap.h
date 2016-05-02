@@ -31,12 +31,12 @@ typedef struct   s_struct
 t_struct g_struct;
 
 /* Parser.c */
-int       nm_cmp_args(char *arg, char **tabargs, int argtype);
+int       nm_cmp_args(char *arg, char **tabargs);
 int       nm_arg_error(char *arg);
 int       nm_argv_parser(char **argv, int argc);
 char**    nm_get_args();
 int       nm_arg_type(char *arg);
-int       nm_init_fun(char *arg, int opt, int argtype);
+int       nm_init_fun(char *arg, int opt, int argtype, char **tabargs);
 int       nm_usage();
 
 int nm_init_ports_opt(char *arg);
