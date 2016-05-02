@@ -12,7 +12,7 @@ void	nm_get_ip_file(char *file)
 	t_list	*ip_entry;
 
 	if ((fd = open(file, O_RDONLY)) <= 0)
-		ft_error_str("Error: Open file\n");
+		ft_error_str_exit("Error: can't open file\n");
 	while (ft_get_next_line(fd, &line) > 0)
 	{
 		if ((ip_entry = malloc(sizeof(t_list))) < 0)
