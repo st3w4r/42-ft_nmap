@@ -52,14 +52,16 @@ int             nm_arg_type(char *arg)
 */
 int           nm_init_fun(char *arg, int opt, int argtype, char **tabargs)
 {
-  if (arg && nm_arg_type(arg) != 0)
-  {
-    printf("Error: %s missing argument\n", tabargs[opt]);
-    return (-1);
-  }
   g_struct.flags |= 1 << opt;
   if (argtype == 2)
+  {
+    if (arg && nm_arg_type(arg) != 0)
+    {
+      printf("Error: %s missing argument\n", tabargs[opt]);
+      return (-1);
+    }
     return (g_struct.ptr_init_fun[opt](arg));
+  }
   else
     return (g_struct.ptr_init_fun[opt](NULL));
 }
