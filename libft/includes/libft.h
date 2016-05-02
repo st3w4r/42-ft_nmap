@@ -6,7 +6,7 @@
 /*   By: snettah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/04 14:02:33 by snettah           #+#    #+#             */
-/*   Updated: 2016/05/02 14:00:22 by ybarbier         ###   ########.fr       */
+/*   Updated: 2016/05/02 18:19:06 by ybarbier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
-# define BUFF_SIZE 32
 
 # define TRUE 1
 # define FALSE 0
@@ -53,7 +52,7 @@ int					ft_toupper(int c);
 int					ft_isalpha(int str);
 int					ft_isalnum(int str);
 char				*ft_strcat(char *dest, char *src);
-int					get_next_line(const int fd, char **line);
+int					ft_get_next_line(const int fd, char **line);
 char				*ft_strncat(char *dest, char *src, size_t n);
 size_t				ft_strlcat(char *dest, const char *src, size_t dstsize);
 char				*ft_strchr(const char *s, int c);
@@ -118,4 +117,10 @@ char				*ft_ltrim(char const *s);
 t_bool				ft_is_number(char *number);
 void				ft_arrfree(char ***arr);
 t_uint				ft_arrlen(char **arr);
+
+void				ft_exit(void);
+void				ft_malloc_error(void);
+void				ft_error_str(char *str);
+void				ft_error_str_exit(char *str);
+
 #endif

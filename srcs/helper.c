@@ -1,34 +1,33 @@
 # include "ft_nmap.h"
 
+void print_ip_store(t_list *elem)
+{
+	printf("IP: %s\n", elem->content);
+}
+
 void	nm_get_ip_file(char *file)
 {
 	int fd;
-	int result;
-	char buf[16];
+	char *line;
+	t_list	*ip_entry;
 
-	result = 0;
-//	g_struct.ip_store = ft_lstnew("ip", sizeof(char*));
-	ft_bzero(buf, sizeof(buf));
 	if ((fd = open(file, O_RDONLY)) <= 0)
+		ft_error_str_exit("Error: can't open file\n");
+	while (ft_get_next_line(fd, &line) > 0)
 	{
-		printf("Error: Open file\n");
-		exit(1);
-	}
-	while ((result = read(fd, buf, sizeof(buf))) > 0)
-	{
-		if (buf[15] != '\n')
+		if ((ip_entry = malloc(sizeof(t_list))) < 0)
+			ft_malloc_error();
+		if (nm_check_ip_v4(line))
 		{
-			printf("Error: Parse file\n");
-			exit(1);
+			ip_entry->content = ft_strdup(line);
+			if (g_struct.ip_store)
+				ft_lstadd(&g_struct.ip_store, ip_entry);
+			else
+				g_struct.ip_store = ft_lstnew(line, ft_strlen(line) + 1);
 		}
-		else
-		{
-			printf("Buf: %s\n", buf);
-		}
-
-		ft_bzero(buf, sizeof(buf));
 	}
 	close(fd);
+	ft_lstiter(g_struct.ip_store, print_ip_store);
 }
 
 /*

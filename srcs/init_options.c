@@ -11,7 +11,7 @@ int nm_init_file_opt(char *arg)
 {
   ft_putstr("nm_init_file_opt\n");
   printf("argtype: %s\n", arg);
-
+  nm_get_ip_file(arg);
   return (0);
 }
 int nm_init_speedup_opt(char *arg)
