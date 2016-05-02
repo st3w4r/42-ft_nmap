@@ -73,5 +73,6 @@ int               main(int argc, char **argv)
 
   nm_argv_parser(argv, argc);
 
+  nm_get_ip_file("ip_list");
   return (0);
 }
