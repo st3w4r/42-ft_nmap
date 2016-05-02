@@ -22,7 +22,8 @@ SRC_NAME =	main.c \
 			parser.c \
 			services.c \
 			init_options.c \
-			helper.c
+			helper.c \
+			ports.c
 
 OBJ_PATH = ./obj/
 
