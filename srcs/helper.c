@@ -1,5 +1,36 @@
 # include "ft_nmap.h"
 
+void	nm_get_ip_file(char *file)
+{
+	int fd;
+	int result;
+	char buf[16];
+
+	result = 0;
+//	g_struct.ip_store = ft_lstnew("ip", sizeof(char*));
+	ft_bzero(buf, sizeof(buf));
+	if ((fd = open(file, O_RDONLY)) <= 0)
+	{
+		printf("Error: Open file\n");
+		exit(1);
+	}
+	while ((result = read(fd, buf, sizeof(buf))) > 0)
+	{
+		if (buf[15] != '\n')
+		{
+			printf("Error: Parse file\n");
+			exit(1);
+		}
+		else
+		{
+			printf("Buf: %s\n", buf);
+		}
+
+		ft_bzero(buf, sizeof(buf));
+	}
+	close(fd);
+}
+
 /*
  * Check IPv4
  * 4 section

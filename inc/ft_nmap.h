@@ -4,6 +4,10 @@
 # include "libft.h"
 # include <stdio.h>
 # include <stdlib.h>
+# include <fcntl.h>
+# include <sys/types.h>
+# include <sys/uio.h>
+# include <unistd.h>
 # include <pcap.h>
 
 /*
@@ -40,6 +44,7 @@ typedef struct   s_struct
   int flags;
   char *argtmp;
   int (*ptr_init_fun[11]) ();
+  t_list	*ip_store;
 }                t_struct;
 
 t_struct g_struct;
@@ -72,6 +77,7 @@ char	*nm_get_service_name(int port, char *protocol);
  ** Name: helper.c
  ** Desc: Helper function
  */
+void	nm_get_ip_file(char *file);
 t_bool	nm_check_ip_v4(char *ip);
 
 #endif

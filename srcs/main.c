@@ -37,7 +37,9 @@ void test_ip_v4()
 		"10.10.10.124",
 		"1.10.100.110",
 		"100.100.100.10",
-		"10.10.10.10"
+		"10.10.10.10",
+		//Long
+		"10.10.10.0010"
 	};
 	printf("Size: %lu\n", sizeof(ip) / sizeof(char *));
 	while (i < sizeof(ip) / sizeof(char*))
@@ -80,6 +82,7 @@ int               main(int argc, char **argv)
 //  nm_argv_parser(argv);
 
   test_ip_v4();
+  nm_get_ip_file("ip_list");
 
   return (0);
 }
