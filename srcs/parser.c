@@ -26,7 +26,7 @@ int             nm_argv_parser(char **argv, int argc)
       return (nm_arg_error(argv[i]));
     i += argtype;
   }
-  // free(tabargs);
+  ft_arrfree(&tabargs);
   return (0);
 }
 
@@ -84,7 +84,6 @@ int             nm_cmp_args(char *arg, char **tabargs)
   i             = 0;
   while (tabargs[i])
   {
-    printf("tabargs: %s, arg: %s\n", tabargs[i], arg);
     if (ft_strcmp(tabargs[i], arg) == 0)
       return (i);
     i++;
@@ -117,7 +116,7 @@ int            nm_usage()
 {
   printf("\nft_nmap [OPTIONS]\n");
   printf("--help Print this help screen\n");
-  printf("--ports ports to scan (eg: 1-10 or 1,2,3 or 1,5-15)\n");
+  printf("--ports ports to scan (eg: (start) 1-10 (end) or 1,2,3 or 1,5-15)\n");
   printf("--ip ip addresses to scan in dot format\n");
   printf("--file File name containing IP addresses to scan,\n");
   printf("--speedup [250 max] number of parallel threads to use\n");

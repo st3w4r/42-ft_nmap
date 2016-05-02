@@ -43,7 +43,7 @@ enum    e_flags
 typedef struct   s_struct
 {
   int flags;
-  int **ports;
+  int *ports;
   int (*ptr_init_fun[11]) ();
   t_list	*ip_store;
 }                t_struct;
