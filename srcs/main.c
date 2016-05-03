@@ -49,8 +49,6 @@ void test_ip_v4()
 	}
 }
 
-
-
 /* Ne pas oublier de remettre les Flags */
 int               main(int argc, char **argv)
 {
@@ -58,8 +56,6 @@ int               main(int argc, char **argv)
   (void)argc;
   nm_g_struct_init();
   nm_argv_parser(argv, argc);
-  printBits(g_struct.types);
-
 
   return (0);
 }

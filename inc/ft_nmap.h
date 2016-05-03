@@ -65,16 +65,19 @@ int       nm_arg_type(char *arg);
 int       nm_init_fun(char *arg, int opt, int argtype, char **tabargs);
 int       nm_usage();
 
-int nm_init_ports_opt(char *arg);
-int nm_init_ip_opt(char *arg);
-int nm_init_file_opt(char *arg);
-int nm_init_speedup_opt(char *arg);
-int nm_init_scan_opt(char *arg);
-int nm_init_spoof_opt(char *arg);
-int nm_init_ttl_opt(char *arg);
-int nm_init_o_opt(char *arg);
-int nm_init_s_opt(char *arg);
-int nm_init_g_opt(char *arg);
+int       nm_init_ports_opt(char *arg);
+int       nm_init_ip_opt(char *arg);
+int       nm_init_file_opt(char *arg);
+int       nm_init_speedup_opt(char *arg);
+int       nm_init_scan_opt(char *arg);
+int       nm_init_spoof_opt(char *arg);
+int       nm_init_ttl_opt(char *arg);
+int       nm_init_o_opt(char *arg);
+int       nm_init_s_opt(char *arg);
+int       nm_init_g_opt(char *arg);
+
+void      nm_g_struct_init_fun(void);
+void      nm_g_struct_init();
 
 /**
  ** Name: services.c
