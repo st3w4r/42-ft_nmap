@@ -28,9 +28,7 @@ int             nm_argv_parser(char **argv, int argc)
 }
 
 /* nm_arg_type
-** retourne le type d'argument
-** avec une optione commencant par -- est suivis d'un argument
-** une option avec - n'a pas d'argument
+** return the type of argument - = 1, -- = 2
 */
 int             nm_arg_type(char *arg)
 {
@@ -42,7 +40,7 @@ int             nm_arg_type(char *arg)
     return (0);
 }
 
-/** execute la fonction approprie a l'argument
+/** execute la
 ** si argtype == 2 (ex: --scan)
 ** elle execute la fonction avec l'argument suivant l'option
 ** ex: --scan UDP -> ptr_init_fun(UDP)
