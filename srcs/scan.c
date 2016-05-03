@@ -1,16 +1,5 @@
 #include "ft_nmap.h"
 
-void printBits(unsigned int num)
-{
-   for(int bit=0;bit<((int)sizeof(unsigned int) * 8); bit++)
-   {
-      printf("%i", num & 0x01);
-      if (bit > 0)
-        bit % (bit * 3) != 0 ? printf(" ") : 0;
-      num = num >> 1;
-   }
-}
-
 char **nm_init_scan_get_types()
 {
   char **arrtypes;
@@ -54,6 +43,7 @@ int nm_init_scan_opt(char *arg)
   types = NULL;
   arrtypes = nm_init_scan_get_types();
   types = ft_strsplit(arg, '/');
+  g_struct.types = 0x0;
   while (types[i])
   {
     if (nm_cmp_types(types[i], arrtypes) == -1)
