@@ -3,7 +3,7 @@
 void test_ip_v4()
 {
 	int i = 0;
-	char *ip[] = { 
+	char *ip[] = {
 		// 4 section
 		"",
 		"0",
@@ -61,8 +61,6 @@ int               main(int argc, char **argv)
 {
 
   (void)argc;
-  // g_struct         = (t_struct *)malloc(sizeof(t_struct));
-  char *str = ft_strdup("Salut");
 
   g_struct.flags = 0x0;
 
