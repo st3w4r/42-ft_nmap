@@ -80,7 +80,6 @@ void nm_g_struct_init()
   g_struct.types = 0x003F;
   printBits(g_struct.types);
   nm_g_struct_init_fun();
-
 }
 
 

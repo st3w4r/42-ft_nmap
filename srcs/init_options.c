@@ -2,15 +2,13 @@
 
 int nm_init_ip_opt(char *arg)
 {
-  ft_putstr("nm_init_ip_opt\n");
-  printf("argtype: %s\n", arg);
-
-  return (0);
+	if (nm_check_ip_v4(arg) == FALSE)
+		return (-1);
+	nm_add_ip_to_ip_store(arg);
+	return (0);
 }
 int nm_init_file_opt(char *arg)
 {
-  ft_putstr("nm_init_file_opt\n");
-  printf("argtype: %s\n", arg);
   nm_get_ip_file(arg);
   return (0);
 }

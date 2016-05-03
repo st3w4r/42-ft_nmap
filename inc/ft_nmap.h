@@ -9,14 +9,8 @@
 # include <sys/uio.h>
 # include <unistd.h>
 # include <pcap.h>
+# include <arpa/inet.h>
 
-/*
-typedef unsigned char	t_bool;
-typedef unsigned int	t_uint;
-
-# define TRUE 1
-# define FALSE 0
-*/
 enum    e_flags
 {
 	HELP_F = 1 << 0,
@@ -92,6 +86,7 @@ char	*nm_get_service_name(int port, char *protocol);
  ** Name: helper.c
  ** Desc: Helper function
  */
+void	nm_add_ip_to_ip_store(char *ip);
 void	nm_get_ip_file(char *file);
 t_bool	nm_check_ip_v4(char *ip);
 
