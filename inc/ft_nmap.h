@@ -28,13 +28,25 @@ enum    e_flags
 
 enum    e_scan_types
 {
-  SYN_F = 1 << 0,
+	SYN_F = 1 << 0,
 	NULL_F = 1 << 1,
 	FUN_F = 1 << 2,
 	XMAS_F = 1 << 3,
 	ACK_F = 1 << 4,
 	UDP_F = 1 << 5,
 };
+
+typedef struct	s_port_result
+{
+	int		port;
+	int		flags; // e_scan_types
+}				t_port_result;
+
+typedef struct	s_store
+{
+	char			*ip;
+	t_result_port	*ports_results;
+}				t_store;
 
 typedef struct	s_service
 {
@@ -51,7 +63,8 @@ typedef struct   s_struct
   int types;
   int ttl;
   int (*ptr_init_fun[11]) ();
-  t_list	*ip_store;
+  t_list	*ip_store; // Linked list of string ip
+  t_store	*sotre; // Array of struct s_store
 }                t_struct;
 
 t_struct g_struct;
