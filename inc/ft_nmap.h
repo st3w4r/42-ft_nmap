@@ -45,7 +45,7 @@ typedef struct	s_port_result
 typedef struct	s_store
 {
 	char			*ip;
-	t_result_port	*ports_results;
+	t_port_result	*ports_results;
 }				t_store;
 
 typedef struct	s_service
