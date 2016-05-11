@@ -25,7 +25,8 @@ SRC_NAME =	main.c \
 			helper.c \
 			ports.c \
 			scan.c \
-			init_global.c
+			init_global.c \
+			connect.c
 
 OBJ_PATH = ./obj/
 
