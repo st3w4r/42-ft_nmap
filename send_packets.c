@@ -89,6 +89,19 @@ struct tcphdr *nm_configure_packet_tcp(char *buf, u_int size_ip,
 	return (tcp);
 }
 
+// int nm_open_socket()
+// {
+// 	int hincl;
+// 	int s;
+//
+// 	hincl = 1;
+// 	if ((s = socket(AF_INET, SOCK_RAW, IPPROTO_TCP)) < 0)
+// 		ft_error_str_exit("Error socket opening\n");
+// 	if (setsockopt(s, IPPROTO_IP, IP_HDRINCL, &hincl, sizeof(hincl)) < 0)
+// 		ft_error_str_exit("Error setsocket\n");
+// 	return (s);
+// }
+
 int main(int argc, char **argv)
 {
 	int s;

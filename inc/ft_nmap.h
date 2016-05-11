@@ -134,4 +134,11 @@ struct tcphdr		*nm_configure_packet_tcp(char *buf, u_int size_ip,
 								u_int ack_seq,
 								u_int flags,
 								unsigned short window);
+
+/**
+ ** Name: loop.c
+ ** Desc: Loop on send and recevive request
+ */
+void nm_loop();
+
 #endif
