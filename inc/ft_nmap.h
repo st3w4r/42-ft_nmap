@@ -11,6 +11,16 @@
 # include <pcap.h>
 # include <arpa/inet.h>
 
+enum		e_flags_tcp
+{
+	F_TCP_URG = 1 << 0,
+	F_TCP_ACK = 1 << 1,
+	F_TCP_PSH = 1 << 2,
+	F_TCP_RST = 1 << 3,
+	F_TCP_SYN = 1 << 4,
+	F_TCP_FIN = 1 << 5
+};
+
 enum    e_flags
 {
 	HELP_F = 1 << 0,
