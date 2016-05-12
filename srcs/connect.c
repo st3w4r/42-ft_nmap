@@ -41,8 +41,10 @@ struct tcphdr		*nm_configure_packet_tcp(char *buf, u_int size_ip,
 			unsigned short window
 		)
 {
+	struct ip *ip;
 	struct tcphdr *tcp;
 
+	ip = (struct ip*)(buf);
 	tcp = (struct tcphdr*)(buf + size_ip);
 
 	tcp->source = htons(port_src);
@@ -62,6 +64,8 @@ struct tcphdr		*nm_configure_packet_tcp(char *buf, u_int size_ip,
 	tcp->window = htons(window);
 	tcp->check = htons(0);
 	tcp->urg_ptr = 0;
-
+	tcp->check = htons(nm_tcp_checksum(buf, size_ip));
+	printf("%4x\n",htons(tcp->check));
+	
 	return (tcp);
 }

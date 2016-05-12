@@ -1,5 +1,60 @@
 # include "ft_nmap.h"
 
+unsigned short	nm_checksum(unsigned short *data, int len)
+{
+	unsigned long checksum;
+
+	checksum = 0;
+	while (len > 1)
+	{
+		checksum = checksum + *data++;
+		len = len - sizeof(unsigned short);
+	}
+	if (len)
+		checksum = checksum + *(unsigned char*)data;
+	checksum = (checksum >> 16) + (checksum & 0xffff);
+	checksum = checksum + (checksum >> 16);
+	return (unsigned short)(~checksum);
+}
+
+unsigned short	nm_tcp_checksum(char *buf, u_int size_ip)
+{
+	struct ip *ip;
+	struct tcphdr *tcp;
+	t_tcp_pseudo_header	pseudo_hdr;
+	unsigned short	checksum;
+	unsigned short	cksum_pseudo;
+	unsigned short	cksum_tcp;
+	char *buf_cal;
+
+	ip = (struct ip*)(buf);
+	tcp = (struct tcphdr*)(buf + size_ip);
+
+	pseudo_hdr.saddr = ip->ip_src.s_addr;
+	pseudo_hdr.daddr = ip->ip_dst.s_addr;
+	pseudo_hdr.reserved = 0;
+	pseudo_hdr.protocol = ip->ip_p;
+	pseudo_hdr.tcp_len = sizeof(struct tcphdr);
+
+//	printf("%lu\n", sizeof(t_tcp_pseudo_header) * 8);
+	buf_cal = malloc(sizeof(t_tcp_pseudo_header) + sizeof(struct tcphdr));
+	ft_memset(buf_cal, 0, sizeof(t_tcp_pseudo_header) + sizeof(struct tcphdr));
+
+	ft_memcpy(buf_cal, &pseudo_hdr, sizeof(t_tcp_pseudo_header));
+	ft_memcpy(buf_cal + sizeof(t_tcp_pseudo_header), tcp, sizeof(struct tcphdr));
+
+	//printf("%u\n",((struct tcphdr*)(buf_cal + sizeof(t_tcp_pseudo_header)))->dest);
+	printf("%u\n",((struct tcphdr*)(buf_cal + sizeof(t_tcp_pseudo_header)))->dest);
+	printf("%u\n",ip->ip_p);
+
+//	cksum_pseudo = nm_checksum((unsigned short*)&pseudo_hdr, sizeof(t_tcp_pseudo_header));
+//	cksum_tcp = nm_checksum((unsigned short*)tcp, sizeof(*tcp));
+	checksum = nm_checksum((unsigned short*)buf_cal,
+			sizeof(t_tcp_pseudo_header) + sizeof(struct tcphdr));
+
+	return (checksum);
+}
+
 void	nm_add_ip_to_ip_store(char *ip)
 {
 	t_list	*ip_entry;

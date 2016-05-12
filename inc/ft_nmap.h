@@ -52,6 +52,15 @@ enum    e_scan_types
 	UDP_F = 1 << 5,
 };
 
+typedef struct	s_tcp_pseudo_header
+{
+	u_int32_t	saddr;
+	u_int32_t	daddr;
+	u_int8_t	reserved;
+	u_int8_t	protocol;
+	u_int16_t	tcp_len;
+}				t_tcp_pseudo_header;
+
 typedef struct	s_port_result
 {
 	int		port;
@@ -121,6 +130,7 @@ char	*nm_get_service_name(int port, char *protocol);
 void	nm_add_ip_to_ip_store(char *ip);
 void	nm_get_ip_file(char *file);
 t_bool	nm_check_ip_v4(char *ip);
+unsigned short	nm_tcp_checksum(char *buf, u_int size_ip);
 
 /**
  ** Name: connect.c
