@@ -13,6 +13,7 @@
 # include <netinet/in.h>
 # include <netinet/ip.h>
 # include <netinet/tcp.h>
+# include <netinet/udp.h>
 # include <netinet/if_ether.h>
 
 # define PACKET_BUF_SIZE 40
@@ -53,14 +54,14 @@ enum    e_scan_types
 	UDP_F = 1 << 5,
 };
 
-typedef struct	s_tcp_pseudo_header
+typedef struct	s_pseudo_header
 {
 	u_int32_t	saddr;
 	u_int32_t	daddr;
 	u_int8_t	reserved;
 	u_int8_t	protocol;
-	u_int16_t	tcp_len;
-}				t_tcp_pseudo_header;
+	u_int16_t	len;
+}				t_pseudo_header;
 
 typedef struct	s_port_result
 {
@@ -131,6 +132,7 @@ char	*nm_get_service_name(int port, char *protocol);
 void	nm_add_ip_to_ip_store(char *ip);
 void	nm_get_ip_file(char *file);
 t_bool	nm_check_ip_v4(char *ip);
+unsigned short	nm_udp_checksum(char *buf, u_int size_ip);
 unsigned short	nm_tcp_checksum(char *buf, u_int size_ip);
 
 /**
@@ -138,14 +140,15 @@ unsigned short	nm_tcp_checksum(char *buf, u_int size_ip);
  ** Desc: Open socket and configure packet ip and tcp
  */
 int				nm_open_socket();
-struct ip	*nm_configure_packet_ip(char *buf, char *ip_dst);
-struct tcphdr		*nm_configure_packet_tcp(char *buf, u_int size_ip,
-								unsigned short port_src, unsigned short port_dst,
-								u_int seq,
-								u_int ack_seq,
-								u_int flags,
-								unsigned short window);
-
+struct ip		*nm_configure_packet_ip(char *buf, char *ip_dst);
+struct tcphdr	*nm_configure_packet_tcp(char *buf, u_int size_ip,
+					unsigned short port_src, unsigned short port_dst,
+					u_int seq,
+					u_int ack_seq,
+					u_int flags,
+					unsigned short window);
+struct udphdr	*nm_configure_packet_udp(char *buf, u_int size_ip,
+					unsigned short port_src, unsigned short port_dst);
 /**
  ** Name: loop.c
  ** Desc: Loop on send and recevive request

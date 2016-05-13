@@ -17,6 +17,7 @@ void	nm_loop()
 	char *buf;
 	struct ip *ip;
 	struct tcphdr *tcp;
+	struct udphdr *udp;
 	unsigned int flags;
 
 	s = nm_open_socket();
@@ -39,8 +40,14 @@ void	nm_loop()
 	else if (g_struct.types & ACK_F)
 		flags = F_TCP_ACK;
 	else if (g_struct.types & UDP_F)
-		printf("Envoi UDP soon\n");
-		
-	tcp = nm_configure_packet_tcp(buf, 20, 4242, 53, 42, 42, flags, 42);
-	nm_send_once(s, buf, ip->ip_len, sin);
+	{
+		udp = nm_configure_packet_udp(buf, 20, 4242, 53);
+		nm_send_once(s, buf, ip->ip_len, sin);
+	}
+	
+	if (!(g_struct.types & UDP_F))
+	{
+		tcp = nm_configure_packet_tcp(buf, 20, 4242, 53, 42, 42, flags, 42);
+		nm_send_once(s, buf, ip->ip_len, sin);
+	}
 }

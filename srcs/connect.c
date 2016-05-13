@@ -25,7 +25,7 @@ struct ip		*nm_configure_packet_ip(char *buf, char *ip_dst)
 	ip->ip_id = 0;
 	ip->ip_off = 0;
 	ip->ip_ttl = 42;
-	ip->ip_p = IPPROTO_TCP;
+	ip->ip_p = (g_struct.types & UDP_F) ? IPPROTO_UDP : IPPROTO_TCP;
 	ip->ip_sum = 0;
 	inet_pton(AF_INET, "0.0.0.0", &(ip->ip_src.s_addr));
 	inet_pton(AF_INET, ip_dst, &(ip->ip_dst.s_addr));
@@ -70,4 +70,21 @@ struct tcphdr		*nm_configure_packet_tcp(char *buf, u_int size_ip,
 	printf("%4x\n",ntohs(tcp->check));
 */	
 	return (tcp);
+}
+
+struct udphdr		*nm_configure_packet_udp(char *buf, u_int size_ip,
+						unsigned short port_src, unsigned short port_dst)
+{
+	struct ip		*ip;
+	struct udphdr	*udp;
+
+	ip = (struct ip*)(buf);
+	udp = (struct udphdr*)(buf + size_ip);
+
+	udp->source = port_src;
+	udp->dest = port_dst;
+	udp->len = htons(sizeof(struct udphdr));
+	udp->check = 0;
+	udp->check = nm_udp_checksum(buf, size_ip);
+	return (udp);
 }
