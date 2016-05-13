@@ -29,7 +29,6 @@ struct ip		*nm_configure_packet_ip(char *buf, char *ip_dst)
 	ip->ip_sum = 0;
 	inet_pton(AF_INET, "0.0.0.0", &(ip->ip_src.s_addr));
 	inet_pton(AF_INET, ip_dst, &(ip->ip_dst.s_addr));
-
 	return (ip);
 }
 
@@ -64,8 +63,11 @@ struct tcphdr		*nm_configure_packet_tcp(char *buf, u_int size_ip,
 	tcp->window = htons(window);
 	tcp->check = htons(0);
 	tcp->urg_ptr = 0;
-	tcp->check = htons(nm_tcp_checksum(buf, size_ip));
+	tcp->check = (nm_tcp_checksum(buf, size_ip));
+
+/*	printf("%4x\n",(tcp->check));
 	printf("%4x\n",htons(tcp->check));
-	
+	printf("%4x\n",ntohs(tcp->check));
+*/	
 	return (tcp);
 }
