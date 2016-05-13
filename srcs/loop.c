@@ -17,6 +17,7 @@ void	nm_loop()
 	char *buf;
 	struct ip *ip;
 	struct tcphdr *tcp;
+	unsigned int flags;
 
 	s = nm_open_socket();
 
@@ -25,8 +26,21 @@ void	nm_loop()
 	buf = malloc(PACKET_BUF_SIZE);
 	ft_memset(buf, 0, PACKET_BUF_SIZE);
 	ip = nm_configure_packet_ip(buf, g_struct.ip_store[0].content);
-	tcp = nm_configure_packet_tcp(buf, 20, 4242, 53, 42, 42, F_TCP_SYN, 42);
 
-	// while (42)
-		nm_send_once(s, buf, ip->ip_len, sin);
+	flags = 0;
+	if (g_struct.types & SYN_F)
+		flags = F_TCP_SYN;
+	else if (g_struct.types & NULL_F)
+		flags = F_TCP_NULL;
+	else if (g_struct.types & FIN_F)
+		flags = F_TCP_FIN;
+	else if (g_struct.types & XMAS_F)
+		flags = F_TCP_FIN | F_TCP_PSH | F_TCP_URG;
+	else if (g_struct.types & ACK_F)
+		flags = F_TCP_ACK;
+	else if (g_struct.types & UDP_F)
+		printf("Envoi UDP soon\n");
+		
+	tcp = nm_configure_packet_tcp(buf, 20, 4242, 53, 42, 42, flags, 42);
+	nm_send_once(s, buf, ip->ip_len, sin);
 }

@@ -24,7 +24,8 @@ enum		e_flags_tcp
 	F_TCP_PSH = 1 << 2,
 	F_TCP_RST = 1 << 3,
 	F_TCP_SYN = 1 << 4,
-	F_TCP_FIN = 1 << 5
+	F_TCP_FIN = 1 << 5,
+	F_TCP_NULL = 0
 };
 
 enum    e_flags
@@ -46,7 +47,7 @@ enum    e_scan_types
 {
 	SYN_F = 1 << 0,
 	NULL_F = 1 << 1,
-	FUN_F = 1 << 2,
+	FIN_F = 1 << 2,
 	XMAS_F = 1 << 3,
 	ACK_F = 1 << 4,
 	UDP_F = 1 << 5,
