@@ -6,7 +6,7 @@
 #    By: snettah <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/26 12:01:48 by snettah           #+#    #+#              #
-#    Updated: 2016/05/02 16:20:49 by ybarbier         ###   ########.fr        #
+#    Updated: 2016/05/17 17:05:57 by ybarbier         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,8 @@ SRC_NAME =	main.c \
 			scan.c \
 			init_global.c \
 			connect.c \
-			loop.c
+			loop.c \
+			sniffer.c
 
 OBJ_PATH = ./obj/
 
@@ -46,6 +47,8 @@ LIB_PATH = ./libft/
 
 LIB_NAME = libft.a
 
+LIB_EXT = -lpcap
+
 #MINI_LIB = -L/usr/X11/lib -lmlx -lXext -lX11
 
 SRC = $(addprefix $(SRC_PATH),$(SRC_NAME))
@@ -62,7 +65,7 @@ all: libmake $(NAME)
 $(NAME): $(OBJ) $(LIB)
 	@$(COMPILE)
 	@$(CC) $(CFLAGS) -o $(NAME) -I$(INC_PATH) -I$(INC_PATH_LIBFT) \
-		$(LIB) $(OBJ) $(LIB)
+		$(LIB) $(OBJ) $(LIB) $(LIB_EXT)
 	@$(COMPILED)
 
 libmake:

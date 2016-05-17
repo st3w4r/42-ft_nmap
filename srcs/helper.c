@@ -43,6 +43,7 @@ unsigned short	nm_udp_checksum(char *buf, u_int size_ip)
 //	printf("%u\n",((struct tcphdr*)(buf_cal + sizeof(t_pseudo_header)))->dest);
 //	printf("%u\n",ip->protocol);
 
+
 	checksum = nm_checksum((unsigned short*)buf_cal,
 			sizeof(t_pseudo_header) + sizeof(struct udphdr));
 	free(buf_cal);
@@ -75,9 +76,13 @@ unsigned short	nm_tcp_checksum(char *buf, u_int size_ip)
 //	printf("%u\n",((struct tcphdr*)(buf_cal + sizeof(t_pseudo_header)))->dest);
 //	printf("%u\n",ip->protocol);
 
+//	printf("IP: %8x\n", ntohs((ip->daddr)));
+//	printf("IP: %d\n", ip->saddr);
+
 	checksum = nm_checksum((unsigned short*)buf_cal,
 			sizeof(t_pseudo_header) + sizeof(struct tcphdr));
 	free(buf_cal);
+	printf("Checksum: %4x\n", checksum);
 	return (checksum);
 }
 

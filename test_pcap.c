@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
 	char errbuf[PCAP_ERRBUF_SIZE];
 	pcap_t *handle;
 	struct bpf_program fp;
-	char filter_exp[] = "tcp";
+	char filter_exp[] = "tcp port 53 and src host 8.8.8.8";
 	bpf_u_int32 mask;
 	bpf_u_int32 net;
 	struct pcap_pkthdr header;

@@ -49,5 +49,6 @@ void	nm_loop()
 	{
 		tcp = nm_configure_packet_tcp(buf, 20, 4242, 53, 42, 42, flags, 42);
 		nm_send_once(s, buf, ip->ip_len, sin);
+		nm_sniffer(g_struct.ip_store[0].content, 53, "tcp");
 	}
 }

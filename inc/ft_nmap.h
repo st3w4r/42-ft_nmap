@@ -134,6 +134,7 @@ void	nm_get_ip_file(char *file);
 t_bool	nm_check_ip_v4(char *ip);
 unsigned short	nm_udp_checksum(char *buf, u_int size_ip);
 unsigned short	nm_tcp_checksum(char *buf, u_int size_ip);
+unsigned short	nm_checksum(unsigned short *data, int len);
 
 /**
  ** Name: connect.c
@@ -154,5 +155,11 @@ struct udphdr	*nm_configure_packet_udp(char *buf, u_int size_ip,
  ** Desc: Loop on send and recevive request
  */
 void nm_loop();
+
+/**
+ ** Name: sniffer.c
+ ** Desc: Sniff the network and capture packets
+ */
+void nm_sniffer(char *ip, unsigned int port, char *proto);
 
 #endif
