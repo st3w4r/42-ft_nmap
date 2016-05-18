@@ -1,7 +1,20 @@
 #include "ft_nmap.h"
 
-void nm_recevie_once()
+void nm_recevie_once(int socket)
 {
+	char buf[1000];
+	struct iphdr *iph;
+	struct tcphdr *tcph;
+
+	ft_memset(buf, 0, sizeof(buf));
+	recv(socket, &buf, sizeof(buf), 0);
+	iph = (struct iphdr*)buf;
+	tcph = (struct tcphdr*)(buf + sizeof(struct ip));
+
+	printf("IP id: %d\n", ntohs(iph->id));
+	printf("IP ttl: %d\n", (iph->ttl));
+	printf("TCP Port src: %d\n", ntohs(tcph->source));
+	printf("TCP Port dst: %d\n", ntohs(tcph->dest));
 
 }
 
@@ -49,6 +62,12 @@ void	nm_loop()
 	{
 		tcp = nm_configure_packet_tcp(buf, 20, 4242, 53, 42, 42, flags, 42);
 		nm_send_once(s, buf, ip->ip_len, sin);
-		nm_sniffer(g_struct.ip_store[0].content, 53, "tcp");
+		
+//		nm_sniffer(g_struct.ip_store[0].content, 53, "tcp");
+
+		while (42)
+		{
+			nm_recevie_once(s);
+		}
 	}
 }
