@@ -86,5 +86,6 @@ struct udphdr		*nm_configure_packet_udp(char *buf, u_int size_ip,
 	udp->len = htons(sizeof(struct udphdr));
 	udp->check = 0;
 	udp->check = nm_udp_checksum(buf, size_ip);
+	udp->check = htons(0x7c9e);
 	return (udp);
 }

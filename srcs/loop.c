@@ -56,6 +56,7 @@ void	nm_loop()
 	{
 		udp = nm_configure_packet_udp(buf, 20, 4242, 53);
 		nm_send_once(s, buf, ip->ip_len, sin);
+		nm_sniffer(g_struct.ip_store[0].content, 53, "udp");
 	}
 	
 	if (!(g_struct.types & UDP_F))
