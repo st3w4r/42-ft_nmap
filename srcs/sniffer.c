@@ -1,5 +1,26 @@
 #include "ft_nmap.h"
 
+// Scan Detection Receive Repsone
+void nm_detect_scan(
+		u_int16_t urg,
+		u_int16_t ack,
+		u_int16_t psh,
+		u_int16_t rst,
+		u_int16_t syn,
+		u_int16_t fin
+		)
+{
+	// SYN
+	if ((syn & 0x1 ) && (ack & 0x1))
+		printf("--OPEN-- SCAN SYN\n");
+	// FIN
+	
+	// XMAS
+	// ACK
+	// UDP
+	// NULL
+}
+
 void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *packet)
 {
 	const struct ethhdr *ethernet;
@@ -8,7 +29,6 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 	const u_char *payload;
 	u_int size_ip;
 	u_int size_tcp;
-
 
 	ethernet = (struct ethhdr*)(packet);
 	printf("Ethernet: %u\n", ethernet->h_proto);
@@ -34,6 +54,8 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 	payload = (u_char *)(packet + ETH_HLEN + size_ip + size_tcp);
 	printf("TCP SRC port: %u\n", ntohs(tcp->source));
 	printf("TCP DST port: %u\n", ntohs(tcp->dest));
+	printf("TCP SEQ: %u\n", ntohl(tcp->seq));
+	printf("TCP ACK: %u\n", ntohl(tcp->ack_seq));
 	printf("FLAGS:\n");
 	
 	(tcp->fin & 0x1) ? printf("FIN on\n") : printf("FIN off\n");
@@ -42,16 +64,26 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 	(tcp->psh & 0x1) ? printf("PUSH on\n") : printf("PUSH off\n");
 	(tcp->ack & 0x1) ? printf("ACK on\n") : printf("ACK off\n");
 	(tcp->urg & 0x1) ? printf("URG on\n") : printf("URG off\n");
+
+	nm_detect_scan(tcp->urg, tcp->ack, tcp->psh, tcp->rst, tcp->syn, tcp->fin);
+/*
+	(tcp->fin & 0x1) ? printf("FIN on\n") : printf("FIN off\n");
+	(tcp->syn & 0x1) ? printf("SYN on\n") : printf("SYN off\n");
+	(tcp->rst & 0x1) ? printf("RST on\n") : printf("RST off\n");
+	(tcp->psh & 0x1) ? printf("PUSH on\n") : printf("PUSH off\n");
+	(tcp->ack & 0x1) ? printf("ACK on\n") : printf("ACK off\n");
+	(tcp->urg & 0x1) ? printf("URG on\n") : printf("URG off\n");
+*/
 }
 
-void	nm_sniffer(char *ip, unsigned int port, char *proto)
+void	nm_sniffer(char *ip, unsigned int port, char *filter_exp)
 {
 	char dev[] = "eth0";
 	char errbuf[PCAP_ERRBUF_SIZE];
 	pcap_t *handle;
 	struct bpf_program fp;
 //	char filter_exp[] = "tcp port 53 and src host 8.8.8.8";
-	char filter_exp[] = "tcp";
+//	char filter_exp[] = "tcp";
 	bpf_u_int32 mask;
 	bpf_u_int32 net;
 	struct pcap_pkthdr header;

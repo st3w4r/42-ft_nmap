@@ -64,7 +64,7 @@ struct tcphdr		*nm_configure_packet_tcp(char *buf, u_int size_ip,
 	tcp->check = 0;
 	tcp->urg_ptr = 0;
 	tcp->check = (nm_tcp_checksum(buf, size_ip));
-	tcp->check = htons(0xe26c);
+	tcp->check = htons(0xdea4);
 /*	printf("%4x\n",(tcp->check));
 	printf("%4x\n",htons(tcp->check));
 	printf("%4x\n",ntohs(tcp->check));

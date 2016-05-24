@@ -160,6 +160,6 @@ void nm_loop();
  ** Name: sniffer.c
  ** Desc: Sniff the network and capture packets
  */
-void nm_sniffer(char *ip, unsigned int port, char *proto);
+void nm_sniffer(char *ip, unsigned int port, char *filter_exp);
 
 #endif

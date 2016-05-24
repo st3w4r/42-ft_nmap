@@ -60,14 +60,16 @@ void	nm_loop()
 	
 	if (!(g_struct.types & UDP_F))
 	{
-		tcp = nm_configure_packet_tcp(buf, 20, 4242, 53, 42, 42, flags, 42);
+		tcp = nm_configure_packet_tcp(buf, 20, 4242, 53, 42, 42, flags, 1024);
 		nm_send_once(s, buf, ip->ip_len, sin);
 		
-//		nm_sniffer(g_struct.ip_store[0].content, 53, "tcp");
-
+		nm_sniffer(g_struct.ip_store[0].content, 53,
+			"tcp");
+//			"tcp port 53 and src host 8.8.8.8");
+/*
 		while (42)
 		{
 			nm_recevie_once(s);
-		}
+		}*/
 	}
 }
