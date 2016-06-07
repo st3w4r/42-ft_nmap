@@ -15,6 +15,7 @@
 # include <netinet/tcp.h>
 # include <netinet/udp.h>
 # include <netinet/if_ether.h>
+# include <ifaddrs.h>
 
 # define PACKET_BUF_SIZE 40
 
@@ -129,6 +130,7 @@ char	*nm_get_service_name(int port, char *protocol);
  ** Name: helper.c
  ** Desc: Helper function
  */
+char	*nm_get_ip_interface();
 void	nm_add_ip_to_ip_store(char *ip);
 void	nm_get_ip_file(char *file);
 t_bool	nm_check_ip_v4(char *ip);

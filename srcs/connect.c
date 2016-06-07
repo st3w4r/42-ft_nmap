@@ -16,6 +16,7 @@ int nm_open_socket()
 struct ip		*nm_configure_packet_ip(char *buf, char *ip_dst)
 {
 	struct ip *ip;
+	char *addr;
 
 	ip = (struct ip*)(buf);
 	ip->ip_v = 4;
@@ -27,8 +28,10 @@ struct ip		*nm_configure_packet_ip(char *buf, char *ip_dst)
 	ip->ip_ttl = 42;
 	ip->ip_p = (g_struct.types & UDP_F) ? IPPROTO_UDP : IPPROTO_TCP;
 	ip->ip_sum = 0;
-	inet_pton(AF_INET, "0.0.0.0", &(ip->ip_src.s_addr));
+	addr = nm_get_ip_interface();
+	inet_pton(AF_INET, addr, &(ip->ip_src.s_addr));
 	inet_pton(AF_INET, ip_dst, &(ip->ip_dst.s_addr));
+	free(addr);
 	return (ip);
 }
 
@@ -64,7 +67,7 @@ struct tcphdr		*nm_configure_packet_tcp(char *buf, u_int size_ip,
 	tcp->check = 0;
 	tcp->urg_ptr = 0;
 	tcp->check = (nm_tcp_checksum(buf, size_ip));
-	tcp->check = htons(0xdea4);
+//	tcp->check = htons(0xdea4);
 /*	printf("%4x\n",(tcp->check));
 	printf("%4x\n",htons(tcp->check));
 	printf("%4x\n",ntohs(tcp->check));

@@ -1,5 +1,29 @@
 # include "ft_nmap.h"
 
+char	*nm_get_ip_interface()
+{
+	struct ifaddrs *ifap;
+	struct ifaddrs *ifa;
+	char *addr;
+
+	addr = NULL;
+	if (getifaddrs(&ifap) < 0)
+		ft_error_str_exit("Error getifaddrs\n");
+	ifa = ifap;
+	while (ifa->ifa_next != NULL)
+	{
+		if (ifa->ifa_addr->sa_family == AF_INET &&
+			ft_strcmp("eth0", ifa->ifa_name) == 0)
+		{
+			addr = ft_strdup(inet_ntoa(((struct sockaddr_in*)ifa->ifa_addr)->sin_addr));
+			break;
+		}
+		ifa = ifa->ifa_next;
+	}
+	freeifaddrs(ifap);
+	return (addr);
+}
+
 unsigned short	nm_checksum(unsigned short *data, int len)
 {
 	unsigned long checksum;
