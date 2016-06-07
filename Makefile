@@ -6,7 +6,7 @@
 #    By: snettah <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/26 12:01:48 by snettah           #+#    #+#              #
-#    Updated: 2016/05/17 17:05:57 by ybarbier         ###   ########.fr        #
+#    Updated: 2016/06/07 16:05:13 by snettah          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,8 @@ NAME = ft_nmap
 CC = clang
 
 #CFLAGS = -Wall -Werror -Wextra
+
+CFLAGS = -lpthread
 
 SRC_PATH = ./srcs/
 

@@ -16,6 +16,7 @@
 # include <netinet/udp.h>
 # include <netinet/if_ether.h>
 # include <ifaddrs.h>
+# include <pthread.h>
 
 # define PACKET_BUF_SIZE 40
 
@@ -95,6 +96,20 @@ typedef struct   s_struct
   t_store	*sotre; // Array of struct s_store
 }                t_struct;
 
+typedef struct		s_th_sniffer
+{
+	char *filter_exp;
+	unsigned short port_dst;
+	unsigned short port_src;
+	u_int seq;
+	u_int ack_seq;
+	u_int flags;
+	struct sockaddr_in sin;
+	int socket;
+	char *ip_str;
+}					t_th_sniffer;
+
+
 t_struct g_struct;
 
 /* Parser.c */
@@ -144,12 +159,11 @@ unsigned short	nm_checksum(unsigned short *data, int len);
  */
 int				nm_open_socket();
 struct ip		*nm_configure_packet_ip(char *buf, char *ip_dst);
-struct tcphdr	*nm_configure_packet_tcp(char *buf, u_int size_ip,
+struct tcphdr	*nm_configure_packet_tcp(char *buf,
 					unsigned short port_src, unsigned short port_dst,
 					u_int seq,
 					u_int ack_seq,
-					u_int flags,
-					unsigned short window);
+					u_int flags);
 struct udphdr	*nm_configure_packet_udp(char *buf, u_int size_ip,
 					unsigned short port_src, unsigned short port_dst);
 /**
@@ -162,6 +176,7 @@ void nm_loop();
  ** Name: sniffer.c
  ** Desc: Sniff the network and capture packets
  */
-void nm_sniffer(char *ip, unsigned int port, char *filter_exp);
+void	 *nm_th_sniffer(void * data);
+void nm_sniffer(char *filter_exp);
 
 #endif

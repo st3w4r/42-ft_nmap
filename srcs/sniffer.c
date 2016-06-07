@@ -73,8 +73,8 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 	(tcp->ack & 0x1) ? printf("ACK on\n") : printf("ACK off\n");
 	(tcp->urg & 0x1) ? printf("URG on\n") : printf("URG off\n");
 
-	nm_detect_scan(SYN_F,
-			tcp->urg, tcp->ack, tcp->psh, tcp->rst, tcp->syn, tcp->fin);
+//	nm_detect_scan(ACK_F,
+//			tcp->urg, tcp->ack, tcp->psh, tcp->rst, tcp->syn, tcp->fin);
 /*
 	(tcp->fin & 0x1) ? printf("FIN on\n") : printf("FIN off\n");
 	(tcp->syn & 0x1) ? printf("SYN on\n") : printf("SYN off\n");
@@ -85,7 +85,40 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 */
 }
 
-void	nm_sniffer(char *ip, unsigned int port, char *filter_exp)
+
+void	 *nm_th_sniffer(void * data)
+{
+
+	t_th_sniffer data_sniffer = *(t_th_sniffer*)data;
+
+	struct ip *ip;
+	struct tcphdr *tcp;
+	struct udphdr *udp;
+	char *buf;
+
+	buf = malloc(PACKET_BUF_SIZE);
+	ft_memset(buf, 0, PACKET_BUF_SIZE);
+	//ip = nm_configure_packet_ip(buf, g_struct.ip_store[0].content);
+	ip = nm_configure_packet_ip(buf, data_sniffer.ip_str);
+
+	tcp = nm_configure_packet_tcp(buf, data_sniffer.port_src, data_sniffer.port_dst
+			, data_sniffer.seq, data_sniffer.ack_seq, data_sniffer.flags);
+
+	printf("Dans thread data_sniffer: %s\n\n", data_sniffer.filter_exp);
+	nm_sniffer(data_sniffer.filter_exp);
+	printf("Apres sniffer\n\n");
+
+	printf("Send once \n\n");
+
+	usleep(1000000);
+	sendto(data_sniffer.socket, buf, ip->ip_len, 0, (struct sockaddr*)&data_sniffer.sin, sizeof(struct sockaddr));
+	//nm_send_once(data_sniffer.socket, buf, ip->ip_len, data_sniffer.sin);
+
+	return (0);
+
+}
+
+void	nm_sniffer(char *filter_exp)
 {
 	char dev[] = "eth0";
 	char errbuf[PCAP_ERRBUF_SIZE];

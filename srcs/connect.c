@@ -35,19 +35,17 @@ struct ip		*nm_configure_packet_ip(char *buf, char *ip_dst)
 	return (ip);
 }
 
-struct tcphdr		*nm_configure_packet_tcp(char *buf, u_int size_ip,
+struct tcphdr		*nm_configure_packet_tcp(char *buf,
 			unsigned short port_src, unsigned short port_dst,
 			u_int seq,
 			u_int ack_seq,
-			u_int flags,
-			unsigned short window
-		)
+			u_int flags)
 {
-	struct ip *ip;
+	struct iphdr *ip;
 	struct tcphdr *tcp;
 
-	ip = (struct ip*)(buf);
-	tcp = (struct tcphdr*)(buf + size_ip);
+	ip = (struct iphdr*)(buf);
+	tcp = (struct tcphdr*)(buf + (ip->ihl * 4));
 
 	tcp->source = htons(port_src);
 	tcp->dest = htons(port_dst);
@@ -63,10 +61,10 @@ struct tcphdr		*nm_configure_packet_tcp(char *buf, u_int size_ip,
 	tcp->syn = (flags & F_TCP_SYN) ? 1 : 0;
 	tcp->fin = (flags & F_TCP_FIN) ? 1 : 0;
 
-	tcp->window = htons(window);
+	tcp->window = htons(1024);
 	tcp->check = 0;
 	tcp->urg_ptr = 0;
-	tcp->check = (nm_tcp_checksum(buf, size_ip));
+	tcp->check = (nm_tcp_checksum(buf, ip->ihl * 4));
 //	tcp->check = htons(0xdea4);
 /*	printf("%4x\n",(tcp->check));
 	printf("%4x\n",htons(tcp->check));
