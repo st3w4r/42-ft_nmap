@@ -129,7 +129,7 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, struct tcphdr *tcp, 
 		mask = 0;
 	}
 
-	handle = pcap_open_live(dev, BUFSIZ, 1, 10000, errbuf);
+	handle = pcap_open_live(dev, BUFSIZ, 1, 500, errbuf);
 	if (handle == NULL)
 	{
 		fprintf(stderr, "Couldn't open device: %s:%s\n", dev, errbuf);
