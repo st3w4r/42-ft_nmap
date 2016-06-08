@@ -91,17 +91,33 @@ void	 *nm_th_sniffer(void * data)
 
 	t_th_sniffer data_sniffer = *(t_th_sniffer*)data;
 
-	printf("Dans thread data_sniffer: %s\n\n", data_sniffer.filter_exp);
-	int ret;
-	ret = nm_sniffer(data_sniffer.filter_exp);
-	printf("Apres sniffer RET: %d\n\n", ret);
+	struct ip *ip;
+	struct tcphdr *tcp;
+	struct udphdr *udp;
+	char *buf;
 
+	buf = malloc(PACKET_BUF_SIZE);
+	ft_memset(buf, 0, PACKET_BUF_SIZE);
+	ip = nm_configure_packet_ip(buf, g_struct.ip_store[0].content);
+	// ip = nm_configure_packet_ip(buf, data_sniffer.ip_str);
+
+	tcp = nm_configure_packet_tcp(buf, data_sniffer.port_src, data_sniffer.port_dst
+			, data_sniffer.seq, data_sniffer.ack_seq, data_sniffer.flags);
+
+	printf("Dans thread data_sniffer: %s\n\n", data_sniffer.filter_exp);
+	nm_sniffer(data_sniffer.filter_exp, buf, ip, tcp, data_sniffer);
+	printf("Apres sniffer\n\n");
+
+	// printf("Send once \n\n");
+
+	// usleep(1000000);
+	// sendto(data_sniffer.socket, buf, ip->ip_len, 0, (struct sockaddr*)&data_sniffer.sin, sizeof(struct sockaddr));
 	//nm_send_once(data_sniffer.socket, buf, ip->ip_len, data_sniffer.sin);
 
 	return (0);
 }
 
-int	nm_sniffer(char *filter_exp)
+void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, struct tcphdr *tcp, t_th_sniffer data_sniffer)
 {
 	char dev[] = "eth0";
 	char errbuf[PCAP_ERRBUF_SIZE];
@@ -142,15 +158,10 @@ int	nm_sniffer(char *filter_exp)
 		exit(2);
 	}
 
-	int ret = 0;
-	int old_ret = -1;
-	while (old_ret != ret)
-	{
-		old_ret = ret;
-		ret += pcap_dispatch(handle, 1, nm_capture_packet, NULL);
-		printf("ret: %d, old_ret: %d\n", ret, old_ret);
-	}
+	printf("Send once \n\n");
+	sendto(data_sniffer.socket, buf, ip->ip_len, 0, (struct sockaddr*)&data_sniffer.sin, sizeof(struct sockaddr));
+	int ret = pcap_dispatch(handle, 1, nm_capture_packet, NULL);
+	printf("Ret: %d\n", ret);
 
 	pcap_close(handle);
-	return (ret);
 }
