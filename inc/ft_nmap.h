@@ -107,6 +107,7 @@ typedef struct		s_th_sniffer
 	struct sockaddr_in sin;
 	int socket;
 	char *ip_str;
+	char *buf;
 }					t_th_sniffer;
 
 
@@ -177,6 +178,6 @@ void nm_loop();
  ** Desc: Sniff the network and capture packets
  */
 void	 *nm_th_sniffer(void * data);
-void nm_sniffer(char *filter_exp);
+int nm_sniffer(char *filter_exp);
 
 #endif
