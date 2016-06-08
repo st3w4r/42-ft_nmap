@@ -80,7 +80,7 @@ void	nm_loop()
 			{
 				printf("Port: %d\n", i);
 				data_sniffer[j].filter_exp = nm_build_filter(i, g_struct.ip_store[0].content);
-				printf("filter_exp: %s\n", data_sniffer[j].filter_exp);
+				// printf("filter_exp: %s\n", data_sniffer[j].filter_exp);
 				data_sniffer[j].port_dst = i;
 				data_sniffer[j].port_src = 4242;
 				data_sniffer[j].seq = 42;
@@ -95,7 +95,7 @@ void	nm_loop()
 				}
 				pthread_join (th_sniffer, NULL);
 				j++;
-				free(data_sniffer[j].filter_exp);
+				// free(data_sniffer[j].filter_exp);
 			}
 			i++;
 		}
@@ -107,20 +107,25 @@ char *nm_build_filter(unsigned short ports_dst, char *ip_str)
 
 	char *str;
 	char *port;
-	char *start;
-	char *middle;
+	// char *start;
+	// char *middle;
+
+	// str = malloc(10);
+	// str = ft_strdup("tcp");
 
 	port = NULL;
 	str = NULL;
-	start = "tcp port ";
-	middle = " and src host ";
+	// start = ft_strdup("tcp port ");
+	// middle = ft_strdup(" and src host ");
 	port = ft_itoa((int)ports_dst);
-	str = (char*)malloc(sizeof(char) * 512);
-	str = ft_strcat(str, start);
+	str = (char*)malloc(1000);
+	ft_bzero(str, 1000);
+	str = ft_strcat(str, "tcp port ");
 	str = ft_strcat(str, port);
-	str = ft_strcat(str, middle);
+	str = ft_strcat(str, " and src host ");
 	str = ft_strcat(str, ip_str);
 
 	printf("str: %s\n", str);
-	return (ft_strdup(str));
+	free(port);
+	return (str);
 }
