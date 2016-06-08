@@ -99,20 +99,12 @@ void	 *nm_th_sniffer(void * data)
 	buf = malloc(PACKET_BUF_SIZE);
 	ft_memset(buf, 0, PACKET_BUF_SIZE);
 	ip = nm_configure_packet_ip(buf, g_struct.ip_store[0].content);
-	// ip = nm_configure_packet_ip(buf, data_sniffer.ip_str);
-
 	tcp = nm_configure_packet_tcp(buf, data_sniffer.port_src, data_sniffer.port_dst
 			, data_sniffer.seq, data_sniffer.ack_seq, data_sniffer.flags);
 
 	printf("Dans thread data_sniffer: %s\n\n", data_sniffer.filter_exp);
 	nm_sniffer(data_sniffer.filter_exp, buf, ip, tcp, data_sniffer);
 	printf("Apres sniffer\n\n");
-
-	// printf("Send once \n\n");
-
-	// usleep(1000000);
-	// sendto(data_sniffer.socket, buf, ip->ip_len, 0, (struct sockaddr*)&data_sniffer.sin, sizeof(struct sockaddr));
-	//nm_send_once(data_sniffer.socket, buf, ip->ip_len, data_sniffer.sin);
 
 	return (0);
 }
@@ -123,7 +115,7 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, struct tcphdr *tcp, 
 	char errbuf[PCAP_ERRBUF_SIZE];
 	pcap_t *handle;
 	struct bpf_program fp;
-//	char filter_exp[] = "tcp port 53 and src host 8.8.8.8";
+	// char filter_exp[] = nm_build_filter(data_sniffer.port_dst, g_struct.ip_store[0].content);;
 //	char filter_exp[] = "tcp";
 	bpf_u_int32 mask;
 	bpf_u_int32 net;
@@ -162,6 +154,5 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, struct tcphdr *tcp, 
 	sendto(data_sniffer.socket, buf, ip->ip_len, 0, (struct sockaddr*)&data_sniffer.sin, sizeof(struct sockaddr));
 	int ret = pcap_dispatch(handle, 1, nm_capture_packet, NULL);
 	printf("Ret: %d\n", ret);
-
 	pcap_close(handle);
 }
