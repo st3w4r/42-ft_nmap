@@ -53,10 +53,10 @@ void	nm_loop()
 		nm_send_once(s, buf, ip->ip_len, sin);
 		nm_sniffer(g_struct.ip_store[0].content, 53, "udp");
 	}
-*/	
+*/
 	if (!(g_struct.types & UDP_F))
 	{
-		
+
 		pthread_t th_sniffer;
 		t_th_sniffer data_sniffer;
 
@@ -65,7 +65,7 @@ void	nm_loop()
 		data_sniffer.seq = 42;
 		data_sniffer.ack_seq = 42;
 		data_sniffer.flags = flags;
-		data_sniffer.filter_exp = "tcp";
+		data_sniffer.filter_exp = "tcp port 53 and src host 8.8.8.8";
 		data_sniffer.socket = s;
 		data_sniffer.sin = sin;
 /**/

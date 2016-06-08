@@ -177,6 +177,6 @@ void nm_loop();
  ** Desc: Sniff the network and capture packets
  */
 void	 *nm_th_sniffer(void * data);
-void nm_sniffer(char *filter_exp);
+void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, struct tcphdr *tcp, t_th_sniffer data_sniffer);
 
 #endif

@@ -26,7 +26,7 @@ void nm_detect_scan(
 	// ACK
 	else if ((scan_type & ACK_F) && (rst & 0x1))
 		printf("--UNFILTRED-- SCAN ACK\n");
-	
+
 }
 
 void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *packet)
@@ -42,13 +42,13 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 	printf("Ethernet: %u\n", ethernet->h_proto);
 
 	ip = (struct ip*)(packet + ETH_HLEN);
-	
+
 	size_ip = ip->ip_hl * 4;
 	if (size_ip < 20) {
 		printf("   * Invalid IP header length: %u bytes\n", size_ip);
 		return ;
 	}
-	
+
 	printf("IP SRC sniffed: %s\n", inet_ntoa(ip->ip_src));
 	printf("IP DST sniffed: %s\n", inet_ntoa(ip->ip_dst));
 
@@ -65,7 +65,7 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 	printf("TCP SEQ: %u\n", ntohl(tcp->seq));
 	printf("TCP ACK: %u\n", ntohl(tcp->ack_seq));
 	printf("FLAGS:\n");
-	
+
 	(tcp->fin & 0x1) ? printf("FIN on\n") : printf("FIN off\n");
 	(tcp->syn & 0x1) ? printf("SYN on\n") : printf("SYN off\n");
 	(tcp->rst & 0x1) ? printf("RST on\n") : printf("RST off\n");
@@ -98,27 +98,27 @@ void	 *nm_th_sniffer(void * data)
 
 	buf = malloc(PACKET_BUF_SIZE);
 	ft_memset(buf, 0, PACKET_BUF_SIZE);
-	//ip = nm_configure_packet_ip(buf, g_struct.ip_store[0].content);
-	ip = nm_configure_packet_ip(buf, data_sniffer.ip_str);
+	ip = nm_configure_packet_ip(buf, g_struct.ip_store[0].content);
+	// ip = nm_configure_packet_ip(buf, data_sniffer.ip_str);
 
 	tcp = nm_configure_packet_tcp(buf, data_sniffer.port_src, data_sniffer.port_dst
 			, data_sniffer.seq, data_sniffer.ack_seq, data_sniffer.flags);
 
 	printf("Dans thread data_sniffer: %s\n\n", data_sniffer.filter_exp);
-	nm_sniffer(data_sniffer.filter_exp);
+	nm_sniffer(data_sniffer.filter_exp, buf, ip, tcp, data_sniffer);
 	printf("Apres sniffer\n\n");
 
-	printf("Send once \n\n");
+	// printf("Send once \n\n");
 
-	usleep(1000000);
-	sendto(data_sniffer.socket, buf, ip->ip_len, 0, (struct sockaddr*)&data_sniffer.sin, sizeof(struct sockaddr));
+	// usleep(1000000);
+	// sendto(data_sniffer.socket, buf, ip->ip_len, 0, (struct sockaddr*)&data_sniffer.sin, sizeof(struct sockaddr));
 	//nm_send_once(data_sniffer.socket, buf, ip->ip_len, data_sniffer.sin);
 
 	return (0);
 
 }
 
-void	nm_sniffer(char *filter_exp)
+void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, struct tcphdr *tcp, t_th_sniffer data_sniffer)
 {
 	char dev[] = "eth0";
 	char errbuf[PCAP_ERRBUF_SIZE];
@@ -130,7 +130,7 @@ void	nm_sniffer(char *filter_exp)
 	bpf_u_int32 net;
 	struct pcap_pkthdr header;
 	const u_char *packet;
-	
+
 	if (pcap_lookupnet(dev, &net, &mask, errbuf) == -1)
 	{
 		fprintf(stderr, "Can't get netmask: %s:%s\n", dev, errbuf);
@@ -160,7 +160,12 @@ void	nm_sniffer(char *filter_exp)
 	}
 
 //	while (42)
-		pcap_dispatch(handle, 100, nm_capture_packet, NULL);
+		// pcap_dispatch(handle, 100, nm_capture_packet, NULL);
+
+	printf("Send once \n\n");
+	sendto(data_sniffer.socket, buf, ip->ip_len, 0, (struct sockaddr*)&data_sniffer.sin, sizeof(struct sockaddr));
+	int ret = pcap_dispatch(handle, 1, nm_capture_packet, NULL);
+	printf("Ret: %d\n", ret);
 
 	pcap_close(handle);
 }
