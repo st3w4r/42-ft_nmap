@@ -40,28 +40,7 @@ void	nm_loop()
 
 	sin.sin_family = AF_INET;
 
-
-	flags = 1;
-	if (g_struct.types & SYN_F)
-		flags = F_TCP_SYN;
-	else if (g_struct.types & NULL_F)
-		flags = F_TCP_NULL;
-	else if (g_struct.types & FIN_F)
-		flags = F_TCP_FIN;
-	else if (g_struct.types & XMAS_F)
-		flags = F_TCP_FIN | F_TCP_PSH | F_TCP_URG;
-	else if (g_struct.types & ACK_F)
-		flags = F_TCP_ACK;
-	else
-		flags = F_TCP_FIN | F_TCP_PSH | F_TCP_URG | F_TCP_ACK | F_TCP_NULL | F_TCP_SYN;
-/*	else if (g_struct.types & UDP_F)
-	{
-		udp = nm_configure_packet_udp(buf, 20, 4242, 53);
-		nm_send_once(s, buf, ip->ip_len, sin);
-		nm_sniffer(g_struct.ip_store[0].content, 53, "udp");
-	}
-*/
-nm_ip_loop(s, sin, flags);
+	nm_ip_loop(s, sin, flags);
 	if (!(g_struct.types & UDP_F))
 	{
 
@@ -90,22 +69,19 @@ void nm_scans_loop(unsigned short port_dst, char *ip_str, int s, struct sockaddr
 	t_th_sniffer data_sniffer;
 	pthread_t th_sniffer;
 	data_sniffer = nm_build_data_sniffer(port_dst, s, ip_str, sin);
-	if (g_struct.types & SYN_F)
-		data_sniffer.flags = F_TCP_SYN;
-	else if (g_struct.types & NULL_F)
-		data_sniffer.flags = F_TCP_NULL;
-	else if (g_struct.types & FIN_F)
-		data_sniffer.flags = F_TCP_FIN;
-	else if (g_struct.types & XMAS_F)
-		data_sniffer.flags = F_TCP_FIN | F_TCP_PSH | F_TCP_URG;
-	else if (g_struct.types & ACK_F)
-		data_sniffer.flags = F_TCP_ACK;
-	// printBits(g_struct.types);
-	// g_struct.types >>= 1;
 
-	if (pthread_create(&th_sniffer, NULL, (void*)&nm_th_sniffer, (void*)&data_sniffer) != 0)
-		printf("Error: pthread create\n");
-	pthread_join (th_sniffer, NULL);
+	int i = 0;
+	while (i < 7)
+	{
+		if (g_struct.types & (1 << i))
+		{
+			data_sniffer.flags = nm_build_flag((1 << i));
+			if (pthread_create(&th_sniffer, NULL, (void*)&nm_th_sniffer, (void*)&data_sniffer) != 0)
+				printf("Error: pthread create\n");
+			pthread_join (th_sniffer, NULL);
+		}
+		i++;
+	}
 
 }
 
@@ -120,6 +96,26 @@ void nm_ports_loop(char *ip_str, int s, struct sockaddr_in sin, unsigned int fla
 			nm_scans_loop(port, ip_str, s, sin);
 		port++;
 	}
+}
+
+int nm_build_flag(enum e_scan_types type)
+{
+	int flags;
+
+	flags = 0;
+	if (type & SYN_F)
+		flags = F_TCP_SYN;
+	else if (type & NULL_F)
+		flags = F_TCP_NULL;
+	else if (type & FIN_F)
+		flags = F_TCP_FIN;
+	else if (type & XMAS_F)
+		flags = F_TCP_FIN | F_TCP_PSH | F_TCP_URG;
+	else if (type & ACK_F)
+		flags = F_TCP_ACK;
+	else
+		flags = F_TCP_FIN | F_TCP_PSH | F_TCP_URG | F_TCP_ACK | F_TCP_NULL | F_TCP_SYN;
+	return flags;
 }
 
 t_th_sniffer nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str, struct sockaddr_in sin)
