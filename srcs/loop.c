@@ -39,11 +39,21 @@ void	nm_loop()
 
 	sin.sin_family = AF_INET;
 
+
 	nm_ip_loop(s, sin, flags);
 
-	if (!(g_struct.types & UDP_F))
-	{
-	}
+	// int i;
+	// i = 0;
+	// while (i <= g_struct.speedup)
+	// {
+	// 	pthread_join(g_struct.th_sniffer[i], NULL);
+	// 	i++;
+	// }
+	// // pthread_join(g_struct.th_sniffer[i], NULL);
+
+	// if (!(g_struct.types & UDP_F))
+	// {
+	// }
 }
 
 void nm_ip_loop(int s, struct sockaddr_in sin, unsigned int flags)
@@ -55,7 +65,6 @@ void nm_ip_loop(int s, struct sockaddr_in sin, unsigned int flags)
 	ip_str = NULL;
 	while (g_struct.ip_store[i].content)
 	{
-
 		nm_ports_loop(g_struct.ip_store[i].content, s, sin, flags);
 		i++;
 	}
@@ -85,26 +94,25 @@ int nm_build_flag(enum e_scan_types type)
 void nm_scans_loop(unsigned short port_dst, char *ip_str, int s, struct sockaddr_in sin)
 {
 	t_th_sniffer data_sniffer;
-	pthread_t th_sniffer[g_struct.speedup];
 
 	int i = 0;
-	int scan = 0;
 	int j = 0;
+	int th = 0;
 
 	while (i < 7)
 	{
 		if (g_struct.types & (1 << i))
 		{
-			printf("scan: %d, speedup: %d, free thread: %d\n", i, g_struct.speedup, g_struct.thread_free);
-			if (g_struct.thread_free >= 0)
+			printf("scan: %d, speedup: %d, free thread: %d\n", i, g_struct.speedup, g_struct.speedup);
+			if (th <= g_struct.speedup)
 			{
 				data_sniffer = nm_build_data_sniffer(port_dst, s, ip_str, sin);
 				data_sniffer.flags = nm_build_flag((1 << i));
-				if (pthread_create(&th_sniffer[g_struct.thread_free], NULL, (void*)&nm_th_sniffer, (void*)&data_sniffer) == 0)
+				if (pthread_create(&g_struct.th_sniffer[th], NULL, (void*)&nm_th_sniffer, (void*)&data_sniffer) == 0)
 				{
 					i++;
-					printf("Thread creer: %d\n", g_struct.thread_free);
-					g_struct.thread_free--;
+					printf("Thread creer: %d\n", th);
+					th++;
 				}
 				else
 					printf("Error: pthread create\n");
@@ -113,10 +121,10 @@ void nm_scans_loop(unsigned short port_dst, char *ip_str, int s, struct sockaddr
 			{
 				printf("Liberation de thread\n");
 				j = 0;
-				while (j < g_struct.speedup)
+				while (j <= g_struct.speedup)
 				{
-					if (pthread_join(th_sniffer[j], NULL) == 0)
-						g_struct.thread_free++;
+					if (pthread_join(g_struct.th_sniffer[j], NULL) == 0)
+						th--;
 					j++;
 				}
 			}
@@ -127,15 +135,12 @@ void nm_scans_loop(unsigned short port_dst, char *ip_str, int s, struct sockaddr
 			i++;
 		}
 	}
-
 	i = 0;
-	while (i < g_struct.speedup)
+	while (i < th)
 	{
-		pthread_join(th_sniffer[i], NULL);
+		pthread_join(g_struct.th_sniffer[i], NULL);
 		i++;
 	}
-	pthread_join(th_sniffer[i], NULL);
-
 }
 
 void nm_ports_loop(char *ip_str, int s, struct sockaddr_in sin, unsigned int flags)

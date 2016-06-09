@@ -94,7 +94,7 @@ typedef struct   s_struct
 	int thread_free;
   t_list *ip_store; // Linked list of string ip
   t_store	*sotre; // Array of struct s_store
-	pthread_t *th_store; //Array of thread
+	pthread_t *th_sniffer; //Array of thread
 	int (*ptr_init_fun[11]) ();
 }                t_struct;
 

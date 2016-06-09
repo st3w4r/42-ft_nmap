@@ -35,5 +35,7 @@ void nm_g_struct_init()
   g_struct.types = 0x003F;
 	nm_g_struct_init_fun();
 
+	g_struct.th_sniffer = (pthread_t*)malloc(sizeof(pthread_t) * g_struct.speedup);
+
   // printBits(g_struct.types);
 }
