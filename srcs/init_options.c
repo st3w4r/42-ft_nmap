@@ -19,10 +19,13 @@ int nm_init_speedup_opt(char *arg)
   if (!ft_is_number(arg))
     return (-1);
   speedup = ft_atoi(arg);
-  if (speedup < 1 || speedup > 250)
+  if (speedup < 0 || speedup > 250)
     return (-1);
   else
     g_struct.speedup = speedup;
+	g_struct.thread_free = g_struct.speedup;
+
+	// g_struct.th_store[g_struct.speedup];
   return (0);
 }
 
