@@ -7,6 +7,7 @@ void printBits(unsigned int num)
       printf("%i ", num & 0x01);
       num = num >> 1;
    }
+	 printf("\n");
 }
 
 void nm_g_struct_init_fun(void)
@@ -30,7 +31,9 @@ void nm_g_struct_init()
   g_struct.flags = 0x0;
   g_struct.ttl = 60;
   g_struct.speedup = 0;
+	g_struct.thread_free = 0;
   g_struct.types = 0x003F;
+	nm_g_struct_init_fun();
+
   // printBits(g_struct.types);
-  nm_g_struct_init_fun();
 }

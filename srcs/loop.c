@@ -89,24 +89,47 @@ void nm_ip_loop(int s, struct sockaddr_in sin, unsigned int flags)
 void nm_scans_loop(unsigned short port_dst, char *ip_str, int s, struct sockaddr_in sin)
 {
 	t_th_sniffer data_sniffer;
-	pthread_t th_sniffer;
-	data_sniffer = nm_build_data_sniffer(port_dst, s, ip_str, sin);
-	if (g_struct.types & SYN_F)
-		data_sniffer.flags = F_TCP_SYN;
-	else if (g_struct.types & NULL_F)
-		data_sniffer.flags = F_TCP_NULL;
-	else if (g_struct.types & FIN_F)
-		data_sniffer.flags = F_TCP_FIN;
-	else if (g_struct.types & XMAS_F)
-		data_sniffer.flags = F_TCP_FIN | F_TCP_PSH | F_TCP_URG;
-	else if (g_struct.types & ACK_F)
-		data_sniffer.flags = F_TCP_ACK;
-	// printBits(g_struct.types);
-	// g_struct.types >>= 1;
+	pthread_t th_sniffer[g_struct.speedup];
 
-	if (pthread_create(&th_sniffer, NULL, (void*)&nm_th_sniffer, (void*)&data_sniffer) != 0)
-		printf("Error: pthread create\n");
-	pthread_join (th_sniffer, NULL);
+	int scan = 0;
+
+	while (scan < 40)
+	{
+		printf("scan: %d, speedup: %d, free thread: %d\n", scan,g_struct.speedup, g_struct.thread_free);
+		if (g_struct.thread_free >= 0)
+		{
+			data_sniffer = nm_build_data_sniffer(port_dst, s, ip_str, sin);
+			if (g_struct.types & SYN_F)
+				data_sniffer.flags = F_TCP_SYN;
+			else if (g_struct.types & NULL_F)
+				data_sniffer.flags = F_TCP_NULL;
+			else if (g_struct.types & FIN_F)
+				data_sniffer.flags = F_TCP_FIN;
+			else if (g_struct.types & XMAS_F)
+				data_sniffer.flags = F_TCP_FIN | F_TCP_PSH | F_TCP_URG;
+			else if (g_struct.types & ACK_F)
+				data_sniffer.flags = F_TCP_ACK;
+			// g_struct.types >>= 1;
+			if (pthread_create(&th_sniffer[g_struct.thread_free], NULL, (void*)&nm_th_sniffer, (void*)&data_sniffer) == 0)
+			{
+				scan++;
+				printf("Thread creer: %d\n", g_struct.thread_free);
+				g_struct.thread_free--;
+			}
+			else
+				printf("Error: pthread create\n");
+		}
+		else
+		{
+			int i = 0;
+			while (i <= g_struct.speedup)
+			{
+				if (pthread_join(th_sniffer[i], NULL) == 0)
+					g_struct.thread_free++;
+				i++;
+			}
+		}
+	}
 
 }
 

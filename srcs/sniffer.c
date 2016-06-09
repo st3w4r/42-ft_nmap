@@ -60,10 +60,10 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 		return ;
 	}
 	payload = (u_char *)(packet + ETH_HLEN + size_ip + size_tcp);
-	printf("TCP SRC port: %u\n", ntohs(tcp->source));
-	printf("TCP DST port: %u\n", ntohs(tcp->dest));
-	printf("TCP SEQ: %u\n", ntohl(tcp->seq));
-	printf("TCP ACK: %u\n", ntohl(tcp->ack_seq));
+	printf("TCP SRC port: %u ", ntohs(tcp->source));
+	printf("TCP DST port: %u ", ntohs(tcp->dest));
+	printf("TCP SEQ: %u ", ntohl(tcp->seq));
+	printf("TCP ACK: %u ", ntohl(tcp->ack_seq));
 	printf("FLAGS:\n");
 
 	(tcp->fin & 0x1) ? printf("FIN on\n") : printf("FIN off\n");

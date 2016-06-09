@@ -87,13 +87,15 @@ typedef struct	s_service
 typedef struct   s_struct
 {
   int flags;
-  int *ports;
   int speedup;
   int types;
   int ttl;
-  int (*ptr_init_fun[11]) ();
-  t_list	*ip_store; // Linked list of string ip
+	int *ports;
+	int thread_free;
+  t_list *ip_store; // Linked list of string ip
   t_store	*sotre; // Array of struct s_store
+	pthread_t *th_store; //Array of thread
+	int (*ptr_init_fun[11]) ();
 }                t_struct;
 
 typedef struct		s_th_sniffer

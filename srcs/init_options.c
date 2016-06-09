@@ -23,6 +23,9 @@ int nm_init_speedup_opt(char *arg)
     return (-1);
   else
     g_struct.speedup = speedup;
+	g_struct.thread_free = g_struct.speedup;
+
+	// g_struct.th_store[g_struct.speedup];
   return (0);
 }
 
