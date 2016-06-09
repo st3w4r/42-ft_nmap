@@ -23,8 +23,14 @@ int nm_init_speedup_opt(char *arg)
     return (-1);
   else
     g_struct.speedup = speedup;
-	g_struct.thread_free = g_struct.speedup;
-
+	g_struct.thread_occupied = (int*)malloc(sizeof(int) * speedup + 1);
+	int i = 0;
+	while (i <= speedup)
+	{
+		g_struct.thread_occupied[i] = 0;
+		i++;
+	}
+	g_struct.th_sniffer = (pthread_t*)malloc(sizeof(pthread_t) * g_struct.speedup + 1);
 	// g_struct.th_store[g_struct.speedup];
   return (0);
 }

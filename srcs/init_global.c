@@ -31,11 +31,10 @@ void nm_g_struct_init()
   g_struct.flags = 0x0;
   g_struct.ttl = 60;
   g_struct.speedup = 0;
+	g_struct.th_sniffer = NULL;
 	g_struct.thread_free = 0;
   g_struct.types = 0x003F;
 	nm_g_struct_init_fun();
-
-	g_struct.th_sniffer = (pthread_t*)malloc(sizeof(pthread_t) * g_struct.speedup);
-
-  // printBits(g_struct.types);
+	if (!g_struct.th_sniffer)
+		printf("th_sniffer malloc error\n");
 }
