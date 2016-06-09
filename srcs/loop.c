@@ -41,6 +41,7 @@ void	nm_loop()
 
 
 	nm_ip_loop(s, sin, flags);
+<<<<<<< HEAD
 
 	// int i;
 	// i = 0;
@@ -54,6 +55,8 @@ void	nm_loop()
 	// if (!(g_struct.types & UDP_F))
 	// {
 	// }
+=======
+>>>>>>> 7fa5f78fdee4dc2982b1be00e0daba690ab66a7a
 }
 
 void nm_ip_loop(int s, struct sockaddr_in sin, unsigned int flags)
@@ -175,6 +178,7 @@ char *nm_build_filter(unsigned short ports_dst, char *ip_str)
 {
 	char *str;
 	char *port;
+
 
 	port = NULL;
 	str = NULL;

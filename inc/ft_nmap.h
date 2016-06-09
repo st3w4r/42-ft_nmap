@@ -176,6 +176,7 @@ struct udphdr	*nm_configure_packet_udp(char *buf, u_int size_ip,
  ** Desc: Loop on send and recevive request
  */
 void nm_loop();
+int nm_build_flag(enum e_scan_types type);
 
 /**
  ** Name: sniffer.c
