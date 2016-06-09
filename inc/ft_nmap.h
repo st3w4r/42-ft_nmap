@@ -114,6 +114,8 @@ typedef struct		s_th_sniffer
 t_struct g_struct;
 
 /* Parser.c */
+void printBits(unsigned int num);
+
 int       nm_cmp_args(char *arg, char **tabargs);
 int       nm_arg_error(char *arg);
 int       nm_argv_parser(char **argv, int argc);

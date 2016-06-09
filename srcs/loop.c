@@ -26,8 +26,7 @@ void nm_send_once(int s, char *buf, u_int len, struct sockaddr_in sin)
 char *nm_build_filter(unsigned short ports_dst, char *ip_str);
 void nm_ip_loop(int s, struct sockaddr_in sin, unsigned int flags);
 void nm_ports_loop(char *ip_str, int s, struct sockaddr_in sin, unsigned int flags);
-t_th_sniffer nm_build_data_sniffer(unsigned short port_dst, int s, unsigned int flags,
-	 char *ip_str, struct sockaddr_in sin);
+t_th_sniffer nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str, struct sockaddr_in sin);
 
 
 void	nm_loop()
@@ -42,7 +41,7 @@ void	nm_loop()
 	sin.sin_family = AF_INET;
 
 
-	flags = 0;
+	flags = 1;
 	if (g_struct.types & SYN_F)
 		flags = F_TCP_SYN;
 	else if (g_struct.types & NULL_F)
@@ -53,6 +52,8 @@ void	nm_loop()
 		flags = F_TCP_FIN | F_TCP_PSH | F_TCP_URG;
 	else if (g_struct.types & ACK_F)
 		flags = F_TCP_ACK;
+	else
+		flags = F_TCP_FIN | F_TCP_PSH | F_TCP_URG | F_TCP_ACK | F_TCP_NULL | F_TCP_SYN;
 /*	else if (g_struct.types & UDP_F)
 	{
 		udp = nm_configure_packet_udp(buf, 20, 4242, 53);
@@ -60,10 +61,10 @@ void	nm_loop()
 		nm_sniffer(g_struct.ip_store[0].content, 53, "udp");
 	}
 */
+nm_ip_loop(s, sin, flags);
 	if (!(g_struct.types & UDP_F))
 	{
 
-		nm_ip_loop(s, sin, flags);
 
 	}
 }
@@ -85,27 +86,44 @@ void nm_ip_loop(int s, struct sockaddr_in sin, unsigned int flags)
 }
 
 
+void nm_scans_loop(unsigned short port_dst, char *ip_str, int s, struct sockaddr_in sin)
+{
+	t_th_sniffer data_sniffer;
+	pthread_t th_sniffer;
+	data_sniffer = nm_build_data_sniffer(port_dst, s, ip_str, sin);
+	if (g_struct.types & SYN_F)
+		data_sniffer.flags = F_TCP_SYN;
+	else if (g_struct.types & NULL_F)
+		data_sniffer.flags = F_TCP_NULL;
+	else if (g_struct.types & FIN_F)
+		data_sniffer.flags = F_TCP_FIN;
+	else if (g_struct.types & XMAS_F)
+		data_sniffer.flags = F_TCP_FIN | F_TCP_PSH | F_TCP_URG;
+	else if (g_struct.types & ACK_F)
+		data_sniffer.flags = F_TCP_ACK;
+	// printBits(g_struct.types);
+	// g_struct.types >>= 1;
+
+	if (pthread_create(&th_sniffer, NULL, (void*)&nm_th_sniffer, (void*)&data_sniffer) != 0)
+		printf("Error: pthread create\n");
+	pthread_join (th_sniffer, NULL);
+
+}
+
 void nm_ports_loop(char *ip_str, int s, struct sockaddr_in sin, unsigned int flags)
 {
 	int port;
 
 	port = 0;
-	t_th_sniffer data_sniffer;
-	pthread_t th_sniffer;
 	while (port < 1024)
 	{
 		if (g_struct.ports[port] == 1)
-		{
-			data_sniffer = nm_build_data_sniffer(port, s, flags, ip_str, sin);
-			if (pthread_create(&th_sniffer, NULL, (void*)&nm_th_sniffer, (void*)&data_sniffer) != 0)
-				printf("Error: pthread create\n");
-			pthread_join (th_sniffer, NULL);
-		}
+			nm_scans_loop(port, ip_str, s, sin);
 		port++;
 	}
 }
 
-t_th_sniffer nm_build_data_sniffer(unsigned short port_dst, int s, unsigned int flags, char *ip_str, struct sockaddr_in sin)
+t_th_sniffer nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str, struct sockaddr_in sin)
 {
 	t_th_sniffer data_sniffer;
 
@@ -114,7 +132,6 @@ t_th_sniffer nm_build_data_sniffer(unsigned short port_dst, int s, unsigned int 
 	data_sniffer.port_src = 4242;
 	data_sniffer.seq = 42;
 	data_sniffer.ack_seq = 42;
-	data_sniffer.flags = flags;
 	data_sniffer.socket = s;
 	data_sniffer.sin = sin;
 

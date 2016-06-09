@@ -48,6 +48,11 @@ int             nm_arg_type(char *arg)
 int           nm_init_fun(char *arg, int opt, int argtype, char **tabargs)
 {
   g_struct.flags |= 1 << opt;
+	if (!arg)
+	{
+		nm_arg_error(arg);
+		exit(0);
+	}
   if (argtype == 2)
   {
     if (arg && nm_arg_type(arg) != 0)
