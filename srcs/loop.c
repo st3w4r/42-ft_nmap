@@ -93,8 +93,8 @@ int nm_build_flag(enum e_scan_types type)
 
 void nm_scans_loop(unsigned short port_dst, char *ip_str, int s, struct sockaddr_in sin)
 {
-	t_th_sniffer data_sniffer;
 
+	t_th_sniffer data_sniffer[7];
 	int i = 0;
 	int j = 0;
 	int th = 0;
@@ -103,12 +103,12 @@ void nm_scans_loop(unsigned short port_dst, char *ip_str, int s, struct sockaddr
 	{
 		if (g_struct.types & (1 << i))
 		{
-			printf("scan: %d, speedup: %d, free thread: %d\n", i, g_struct.speedup, g_struct.speedup);
-			if (th <= g_struct.speedup)
+			if (th < g_struct.speedup)
 			{
-				data_sniffer = nm_build_data_sniffer(port_dst, s, ip_str, sin);
-				data_sniffer.flags = nm_build_flag((1 << i));
-				if (pthread_create(&g_struct.th_sniffer[th], NULL, (void*)&nm_th_sniffer, (void*)&data_sniffer) == 0)
+				printf("scan: %d, speedup: %d, free thread: %d\n", i, g_struct.speedup, g_struct.speedup);
+				data_sniffer[i] = nm_build_data_sniffer(port_dst, s, ip_str, sin);
+				data_sniffer[i].flags = nm_build_flag((1 << i));
+				if (pthread_create(&g_struct.th_sniffer[th], NULL, (void*)&nm_th_sniffer, (void*)&data_sniffer[i]) == 0)
 				{
 					i++;
 					printf("Thread creer: %d\n", th);
@@ -121,7 +121,7 @@ void nm_scans_loop(unsigned short port_dst, char *ip_str, int s, struct sockaddr
 			{
 				printf("Liberation de thread\n");
 				j = 0;
-				while (j <= g_struct.speedup)
+				while (j < g_struct.speedup)
 				{
 					if (pthread_join(g_struct.th_sniffer[j], NULL) == 0)
 						th--;
