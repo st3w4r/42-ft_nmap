@@ -35,37 +35,14 @@ void	nm_loop()
 	struct sockaddr_in sin;
 	char *buf;
 	unsigned int flags;
-
 	s = nm_open_socket();
 
 	sin.sin_family = AF_INET;
 
+	nm_ip_loop(s, sin, flags);
 
-	flags = 1;
-	if (g_struct.types & SYN_F)
-		flags = F_TCP_SYN;
-	else if (g_struct.types & NULL_F)
-		flags = F_TCP_NULL;
-	else if (g_struct.types & FIN_F)
-		flags = F_TCP_FIN;
-	else if (g_struct.types & XMAS_F)
-		flags = F_TCP_FIN | F_TCP_PSH | F_TCP_URG;
-	else if (g_struct.types & ACK_F)
-		flags = F_TCP_ACK;
-	else
-		flags = F_TCP_FIN | F_TCP_PSH | F_TCP_URG | F_TCP_ACK | F_TCP_NULL | F_TCP_SYN;
-/*	else if (g_struct.types & UDP_F)
-	{
-		udp = nm_configure_packet_udp(buf, 20, 4242, 53);
-		nm_send_once(s, buf, ip->ip_len, sin);
-		nm_sniffer(g_struct.ip_store[0].content, 53, "udp");
-	}
-*/
-nm_ip_loop(s, sin, flags);
 	if (!(g_struct.types & UDP_F))
 	{
-
-
 	}
 }
 
@@ -85,51 +62,79 @@ void nm_ip_loop(int s, struct sockaddr_in sin, unsigned int flags)
 
 }
 
+int nm_build_flag(enum e_scan_types type)
+{
+	int flags;
+
+	flags = 0;
+	if (type & SYN_F)
+		flags = F_TCP_SYN;
+	else if (type & NULL_F)
+		flags = F_TCP_NULL;
+	else if (type & FIN_F)
+		flags = F_TCP_FIN;
+	else if (type & XMAS_F)
+		flags = F_TCP_FIN | F_TCP_PSH | F_TCP_URG;
+	else if (type & ACK_F)
+		flags = F_TCP_ACK;
+	else
+		flags = F_TCP_FIN | F_TCP_PSH | F_TCP_URG | F_TCP_ACK | F_TCP_NULL | F_TCP_SYN;
+	return flags;
+}
 
 void nm_scans_loop(unsigned short port_dst, char *ip_str, int s, struct sockaddr_in sin)
 {
 	t_th_sniffer data_sniffer;
 	pthread_t th_sniffer[g_struct.speedup];
 
+	int i = 0;
 	int scan = 0;
+	int j = 0;
 
-	while (scan < 40)
+	while (i < 7)
 	{
-		printf("scan: %d, speedup: %d, free thread: %d\n", scan,g_struct.speedup, g_struct.thread_free);
-		if (g_struct.thread_free >= 0)
+		if (g_struct.types & (1 << i))
 		{
-			data_sniffer = nm_build_data_sniffer(port_dst, s, ip_str, sin);
-			if (g_struct.types & SYN_F)
-				data_sniffer.flags = F_TCP_SYN;
-			else if (g_struct.types & NULL_F)
-				data_sniffer.flags = F_TCP_NULL;
-			else if (g_struct.types & FIN_F)
-				data_sniffer.flags = F_TCP_FIN;
-			else if (g_struct.types & XMAS_F)
-				data_sniffer.flags = F_TCP_FIN | F_TCP_PSH | F_TCP_URG;
-			else if (g_struct.types & ACK_F)
-				data_sniffer.flags = F_TCP_ACK;
-			// g_struct.types >>= 1;
-			if (pthread_create(&th_sniffer[g_struct.thread_free], NULL, (void*)&nm_th_sniffer, (void*)&data_sniffer) == 0)
+			printf("scan: %d, speedup: %d, free thread: %d\n", i, g_struct.speedup, g_struct.thread_free);
+			if (g_struct.thread_free >= 0)
 			{
-				scan++;
-				printf("Thread creer: %d\n", g_struct.thread_free);
-				g_struct.thread_free--;
+				data_sniffer = nm_build_data_sniffer(port_dst, s, ip_str, sin);
+				data_sniffer.flags = nm_build_flag((1 << i));
+				if (pthread_create(&th_sniffer[g_struct.thread_free], NULL, (void*)&nm_th_sniffer, (void*)&data_sniffer) == 0)
+				{
+					i++;
+					printf("Thread creer: %d\n", g_struct.thread_free);
+					g_struct.thread_free--;
+				}
+				else
+					printf("Error: pthread create\n");
 			}
 			else
-				printf("Error: pthread create\n");
+			{
+				printf("Liberation de thread\n");
+				j = 0;
+				while (j < g_struct.speedup)
+				{
+					if (pthread_join(th_sniffer[j], NULL) == 0)
+						g_struct.thread_free++;
+					j++;
+				}
+			}
 		}
 		else
 		{
-			int i = 0;
-			while (i <= g_struct.speedup)
-			{
-				if (pthread_join(th_sniffer[i], NULL) == 0)
-					g_struct.thread_free++;
-				i++;
-			}
+			printf("Else\n");
+			i++;
 		}
 	}
+
+	i = 0;
+	while (i < g_struct.speedup)
+	{
+		pthread_join(th_sniffer[i], NULL);
+		i++;
+	}
+	pthread_join(th_sniffer[i], NULL);
 
 }
 
