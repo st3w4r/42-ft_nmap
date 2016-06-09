@@ -26,7 +26,7 @@ void nm_send_once(int s, char *buf, u_int len, struct sockaddr_in sin)
 char *nm_build_filter(unsigned short ports_dst, char *ip_str);
 void nm_ip_loop(int s, struct sockaddr_in sin, unsigned int flags);
 void nm_ports_loop(char *ip_str, int s, struct sockaddr_in sin, unsigned int flags);
-t_th_sniffer nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str, struct sockaddr_in sin);
+t_th_sniffer nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str, struct sockaddr_in sin, enum e_scan_types type);
 
 
 void	nm_loop()
@@ -93,7 +93,7 @@ int nm_build_flag(enum e_scan_types type)
 
 void nm_scans_loop(unsigned short port_dst, char *ip_str, int s, struct sockaddr_in sin)
 {
-	t_th_sniffer data_sniffer;
+	t_th_sniffer data_sniffer[7];
 
 	int i = 0;
 	int j = 0;
@@ -106,9 +106,8 @@ void nm_scans_loop(unsigned short port_dst, char *ip_str, int s, struct sockaddr
 			printf("scan: %d, speedup: %d, free thread: %d\n", i, g_struct.speedup, g_struct.speedup);
 			if (th <= g_struct.speedup)
 			{
-				data_sniffer = nm_build_data_sniffer(port_dst, s, ip_str, sin);
-				data_sniffer.flags = nm_build_flag((1 << i));
-				if (pthread_create(&g_struct.th_sniffer[th], NULL, (void*)&nm_th_sniffer, (void*)&data_sniffer) == 0)
+				data_sniffer[i] = nm_build_data_sniffer(port_dst, s, ip_str, sin, (1 << i));
+				if (pthread_create(&g_struct.th_sniffer[th], NULL, (void*)&nm_th_sniffer, (void*)&data_sniffer[i]) == 0)
 				{
 					i++;
 					printf("Thread creer: %d\n", th);
@@ -156,7 +155,7 @@ void nm_ports_loop(char *ip_str, int s, struct sockaddr_in sin, unsigned int fla
 	}
 }
 
-t_th_sniffer nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str, struct sockaddr_in sin)
+t_th_sniffer nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str, struct sockaddr_in sin, enum e_scan_types type)
 {
 	t_th_sniffer data_sniffer;
 
@@ -167,6 +166,7 @@ t_th_sniffer nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str,
 	data_sniffer.ack_seq = 42;
 	data_sniffer.socket = s;
 	data_sniffer.sin = sin;
+	data_sniffer.flags = nm_build_flag(type);
 
 	return data_sniffer;
 }
