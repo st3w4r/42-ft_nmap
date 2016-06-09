@@ -19,6 +19,7 @@
 # include <pthread.h>
 
 # define PACKET_BUF_SIZE 40
+# define NB_SCAN_TYPES 6 //Number of e_scan_types
 
 enum		e_flags_tcp
 {

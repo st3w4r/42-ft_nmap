@@ -132,7 +132,6 @@ void nm_scans_loop(unsigned short port_dst, char *ip_str, int s, struct sockaddr
 			if (g_struct.thread_free <= g_struct.speedup)
 			{
 				data_sniffer[i] = nm_build_data_sniffer(port_dst, s, ip_str, sin, (1 << i));
-
 				if (pthread_create(&g_struct.th_sniffer[g_struct.thread_free], NULL, (void*)&nm_th_sniffer, (void*)&data_sniffer[i]) == 0)
 				{
 					g_struct.thread_occupied[g_struct.thread_free] = 1;
