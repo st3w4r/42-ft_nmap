@@ -102,11 +102,12 @@ void	 *nm_th_sniffer(void * data)
 	tcp = nm_configure_packet_tcp(buf, data_sniffer.port_src, data_sniffer.port_dst
 			, data_sniffer.seq, data_sniffer.ack_seq, data_sniffer.flags);
 
-	printf("Dans thread data_sniffer: %s\n\n", data_sniffer.filter_exp);
-	nm_sniffer(data_sniffer.filter_exp, buf, ip, tcp, data_sniffer);
-	printf("Apres sniffer\n\n");
 
-	return (0);
+	printf("Dans thread data_sniffer: %s flag: %d\n", data_sniffer.filter_exp, data_sniffer.flags);
+	// usleep((rand() % 4000000));
+	nm_sniffer(data_sniffer.filter_exp, buf, ip, tcp, data_sniffer);
+	printf("Sortie de thread\n");
+	return (1);
 }
 
 void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, struct tcphdr *tcp, t_th_sniffer data_sniffer)
@@ -115,8 +116,6 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, struct tcphdr *tcp, 
 	char errbuf[PCAP_ERRBUF_SIZE];
 	pcap_t *handle;
 	struct bpf_program fp;
-	// char filter_exp[] = nm_build_filter(data_sniffer.port_dst, g_struct.ip_store[0].content);;
-//	char filter_exp[] = "tcp";
 	bpf_u_int32 mask;
 	bpf_u_int32 net;
 	struct pcap_pkthdr header;
@@ -150,9 +149,8 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, struct tcphdr *tcp, 
 		exit(2);
 	}
 
-	printf("Send once \n\n");
 	sendto(data_sniffer.socket, buf, ip->ip_len, 0, (struct sockaddr*)&data_sniffer.sin, sizeof(struct sockaddr));
 	int ret = pcap_dispatch(handle, 1, nm_capture_packet, NULL);
-	printf("Ret: %d\n", ret);
+
 	pcap_close(handle);
 }

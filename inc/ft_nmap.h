@@ -95,6 +95,7 @@ typedef struct   s_struct
   t_list *ip_store; // Linked list of string ip
   t_store	*sotre; // Array of struct s_store
 	pthread_t *th_sniffer; //Array of thread
+	int *thread_occupied;
 	int (*ptr_init_fun[11]) ();
 }                t_struct;
 

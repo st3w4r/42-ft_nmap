@@ -106,7 +106,6 @@ unsigned short	nm_tcp_checksum(char *buf, u_int size_ip)
 	checksum = nm_checksum((unsigned short*)buf_cal,
 			sizeof(t_pseudo_header) + sizeof(struct tcphdr));
 	free(buf_cal);
-	printf("Checksum: %4x\n", checksum);
 	return (checksum);
 }
 
