@@ -1,5 +1,6 @@
 #include "ft_nmap.h"
 
+
 char **nm_init_scan_get_types()
 {
   char **arrtypes;
@@ -50,6 +51,5 @@ int nm_init_scan_opt(char *arg)
       return (-1);
     i++;
   }
-  // printBits(g_struct.types);
   return (0);
 }

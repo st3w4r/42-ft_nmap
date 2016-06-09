@@ -1,5 +1,14 @@
 #include "ft_nmap.h"
 
+void printBits(unsigned int num)
+{
+   for(int bit=0;bit<(sizeof(unsigned int) * 8); bit++)
+   {
+      printf("%i ", num & 0x01);
+      num = num >> 1;
+   }
+}
+
 void nm_g_struct_init_fun(void)
 {
   g_struct.ptr_init_fun[0] = nm_usage;
