@@ -26,7 +26,11 @@ void nm_send_once(int s, char *buf, u_int len, struct sockaddr_in sin)
 char *nm_build_filter(unsigned short ports_dst, char *ip_str);
 void nm_ip_loop(int s, struct sockaddr_in sin, unsigned int flags);
 void nm_ports_loop(char *ip_str, int s, struct sockaddr_in sin, unsigned int flags);
+<<<<<<< HEAD
 t_th_sniffer *nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str, struct sockaddr_in sin);
+=======
+t_th_sniffer *nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str, struct sockaddr_in sin, , enum e_scan_types type);
+>>>>>>> 12e27ff7f966e1b265e17359544d78d8e8edd293
 int free_threads();
 
 
@@ -128,11 +132,15 @@ void nm_scans_loop(t_th_sniffer *data_sniffer, unsigned short port_dst, char *ip
 	{
 		if (g_struct.types & (1 << i))
 		{
+<<<<<<< HEAD
+=======
+
+>>>>>>> 12e27ff7f966e1b265e17359544d78d8e8edd293
 			// if (g_struct.thread_free < g_struct.speedup)
 			// {
 				if (g_struct.thread_free == g_struct.speedup)
 					free_threads();
-				data_sniffer = nm_build_data_sniffer(port_dst, s, ip_str, sin);
+				data_sniffer = nm_build_data_sniffer(port_dst, s, ip_str, sin, (1 << i));
 				data_sniffer->flags = nm_build_flag((1 << i));
 
 				if (pthread_create(&g_struct.th_sniffer[g_struct.thread_free], NULL, (void*)&nm_th_sniffer, (void*)data_sniffer) == 0)
@@ -189,6 +197,11 @@ t_th_sniffer *nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str
 	data_sniffer->ack_seq = 42;
 	data_sniffer->socket = s;
 	data_sniffer->sin = sin;
+<<<<<<< HEAD
+=======
+	data_sniffer->flags = nm_build_flag(type);
+
+>>>>>>> 12e27ff7f966e1b265e17359544d78d8e8edd293
 
 	return data_sniffer;
 }
