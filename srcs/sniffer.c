@@ -2,8 +2,9 @@
 
 // Scan Detection Receive Response
 
-void nm_detect_scan(
+enum e_scan_result	nm_detect_scan(
 		enum e_scan_types scan_type,
+		t_bool timeout,
 		u_int16_t urg,
 		u_int16_t ack,
 		u_int16_t psh,
@@ -12,29 +13,46 @@ void nm_detect_scan(
 		u_int16_t fin
 		)
 {
+	enum e_scan_result result;
 	// SYN
 	if ((scan_type & SYN_F) && (syn & 0x1 ) && (ack & 0x1))
 	{
 		printf("--OPEN-- SCAN SYN\n");
-
+		result = F_RESULT_OPEN;
 	}
 	else if ((scan_type & SYN_F) && (rst & 0x1))
 	{
 		printf("--CLOSE-- SCAN SYN\n");
+		result = F_RESULT_CLOSE;
 	}
 	// NULL
 	else if ((scan_type & NULL_F) && (rst & 0x1))
+	{
 		printf("--CLOSE-- SCAN NULL\n");
+		result = F_RESULT_CLOSE;
+	}
 	// FIN
 	else if ((scan_type & FIN_F) && (rst & 0x1))
+	{
 		printf("--CLOSE-- SCAN FIN\n");
+		result = F_RESULT_CLOSE;
+	}
 	// XMAS
 	else if ((scan_type & XMAS_F) && (rst & 0x1))
+	{
 		printf("--CLOSE-- SCAN XMAS\n");
+		result = F_RESULT_CLOSE;
+	}
 	// ACK
 	else if ((scan_type & ACK_F) && (rst & 0x1))
+	{
 		printf("--UNFILTRED-- SCAN ACK\n");
+		result = F_RESULT_UNFILTERED;
+	}
+	else if (timeout == TRUE)
+		printf("--TIMEOUT--\n");
 
+	return (result);
 }
 
 void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *packet)
@@ -84,7 +102,7 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 	(tcp->urg & 0x1) ? printf("URG on\n") : printf("URG off\n");
 
 	// printf("DATA SNIFFER: %s\n", data_sniffer->ip_str);
-	nm_detect_scan(data_sniffer->scan_type,
+	data_sniffer->scan_result = nm_detect_scan(data_sniffer->scan_type, FALSE,
 			tcp->urg, tcp->ack, tcp->psh, tcp->rst, tcp->syn, tcp->fin);
 
 /*
@@ -169,6 +187,9 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, t_th_sniffer data_sn
 
 	sendto(data_sniffer.socket, buf, ip->ip_len, 0, (struct sockaddr*)&data_sniffer.sin, sizeof(struct sockaddr));
 	int ret = pcap_dispatch(handle, 1, nm_capture_packet, (unsigned char *)&data_sniffer);
+	if (ret == 0)
+		nm_detect_scan(data_sniffer.scan_type, TRUE, 0, 0, 0, 0, 0, 0);
+	// 	printf("Ret: %d\n", ret);
 
 	pcap_close(handle);
 }
