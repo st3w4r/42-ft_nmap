@@ -71,6 +71,8 @@ void nm_ip_loop(int s, struct sockaddr_in sin, unsigned int flags)
 		i++;
 	}
 	free_threads();
+	pthread_exit(NULL);
+
 
 }
 
@@ -175,7 +177,6 @@ void nm_ports_loop(char *ip_str, int s, struct sockaddr_in sin, unsigned int fla
 		port++;
 	}
 	printf("Dernier free\n");
-	// pthread_exit(NULL);
 }
 
 t_th_sniffer *nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str, struct sockaddr_in sin, enum e_scan_types type)

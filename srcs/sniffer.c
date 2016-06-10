@@ -154,6 +154,5 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, struct tcphdr *tcp, 
 	sendto(data_sniffer.socket, buf, ip->ip_len, 0, (struct sockaddr*)&data_sniffer.sin, sizeof(struct sockaddr));
 	int ret = pcap_dispatch(handle, 1, nm_capture_packet, NULL);
 
-
 	pcap_close(handle);
 }
