@@ -143,9 +143,8 @@ void nm_scans_loop(t_th_sniffer *data_sniffer, unsigned short port_dst, char *ip
 				g_struct.thread_free++;
 				i++;
 			}
-		}
-		else
-			printf("Plus de Threads\n");
+			else
+				printf("Plus de Threads\n");
 		}
 		else
 			i++;
