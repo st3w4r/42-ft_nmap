@@ -41,16 +41,18 @@ unsigned short	nm_checksum(unsigned short *data, int len)
 	return (unsigned short)(~checksum);
 }
 
-unsigned short	nm_pseudo_header_checksum(char *buf, u_int size_ip, u_int size_protocol)
+unsigned short	nm_pseudo_header_checksum(char *buf, u_int size_ip)
 {
 	struct iphdr		*ip;
 	char						*header;
 	t_pseudo_header	pseudo_hdr;
 	unsigned short	checksum;
 	char						*buf_cal;
+	u_int						size_protocol;
 
 	ip = (struct iphdr*)(buf);
 	header = (buf + size_ip);
+	size_protocol = ip->tot_len - size_ip;
 
 	pseudo_hdr.saddr = ip->saddr;
 	pseudo_hdr.daddr = ip->daddr;
@@ -63,12 +65,6 @@ unsigned short	nm_pseudo_header_checksum(char *buf, u_int size_ip, u_int size_pr
 
 	ft_memcpy(buf_cal, &pseudo_hdr, sizeof(t_pseudo_header));
 	ft_memcpy(buf_cal + sizeof(t_pseudo_header), header, size_protocol);
-
-//	printf("%u\n",((struct tcphdr*)(buf_cal + sizeof(t_pseudo_header)))->dest);
-//	printf("%u\n",ip->protocol);
-
-//	printf("IP: %8x\n", ntohs((ip->daddr)));
-//	printf("IP: %d\n", ip->saddr);
 
 	checksum = nm_checksum((unsigned short*)buf_cal,
 			sizeof(t_pseudo_header) + size_protocol);

@@ -162,7 +162,7 @@ char	*nm_get_ip_interface();
 void	nm_add_ip_to_ip_store(char *ip);
 void	nm_get_ip_file(char *file);
 t_bool	nm_check_ip_v4(char *ip);
-unsigned short	nm_pseudo_header_checksum(char *buf, u_int size_ip, u_int size_protocol);
+unsigned short	nm_pseudo_header_checksum(char *buf, u_int size_ip);
 unsigned short	nm_checksum(unsigned short *data, int len);
 
 /**

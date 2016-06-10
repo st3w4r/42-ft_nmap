@@ -22,7 +22,7 @@ struct ip		*nm_configure_packet_ip(char *buf, char *ip_dst, enum e_scan_types ty
 	ip->ip_v = 4;
 	ip->ip_hl = sizeof(*ip) >> 2;
 	ip->ip_tos = 0;
-	ip->ip_len = sizeof(struct ip) + sizeof(struct tcphdr);// htons(sizeof(buf));
+	ip->ip_len = sizeof(struct iphdr) + ((type & UDP_F) ? sizeof(struct udphdr) : sizeof(struct tcphdr));// htons(sizeof(buf));
 	ip->ip_id = 0;
 	ip->ip_off = 0;
 	ip->ip_ttl = 42;
@@ -64,7 +64,7 @@ struct tcphdr		*nm_configure_packet_tcp(char *buf,
 	tcp->window = htons(1024);
 	tcp->check = 0;
 	tcp->urg_ptr = 0;
-	tcp->check = (nm_pseudo_header_checksum(buf, ip->ihl * 4, sizeof(struct tcphdr)));
+	tcp->check = (nm_pseudo_header_checksum(buf, ip->ihl * 4));
 //	tcp->check = htons(0xdea4);
 /*	printf("%4x\n",(tcp->check));
 	printf("%4x\n",htons(tcp->check));
@@ -86,7 +86,7 @@ struct udphdr		*nm_configure_packet_udp(char *buf,
 	udp->dest = port_dst;
 	udp->len = htons(sizeof(struct udphdr));
 	udp->check = 0;
-	udp->check = nm_pseudo_header_checksum(buf, ip->ihl * 4, sizeof(struct udphdr));
+	udp->check = nm_pseudo_header_checksum(buf, ip->ihl * 4);
 //	udp->check = htons(0x7c9e);
 	return (udp);
 }
