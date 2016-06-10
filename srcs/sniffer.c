@@ -1,33 +1,33 @@
 #include "ft_nmap.h"
 
 // Scan Detection Receive Response
-// void nm_detect_scan(
-// 		enum e_scan_types scan_type,
-// 		u_int16_t urg,
-// 		u_int16_t ack,
-// 		u_int16_t psh,
-// 		u_int16_t rst,
-// 		u_int16_t syn,
-// 		u_int16_t fin
-// 		)
-// {
-// 	// SYN
-// 	if ((scan_type & SYN_F) && (syn & 0x1 ) && (ack & 0x1))
-// 		printf("--OPEN-- SCAN SYN\n");
-// 	// NULL
-// 	else if ((scan_type & NULL_F) && (rst & 0x1))
-// 		printf("--CLOSE-- SCAN NULL");
-// 	// FIN
-// 	else if ((scan_type & FIN_F) && (rst & 0x1))
-// 		printf("--CLOSE-- SCAN FIN");
-// 	// XMAS
-// 	else if ((scan_type & XMAS_F) && (rst & 0x1))
-// 		printf("--CLOSE-- SCAN XMAS");
-// 	// ACK
-// 	else if ((scan_type & ACK_F) && (rst & 0x1))
-// 		printf("--UNFILTRED-- SCAN ACK\n");
-//
-// }
+void nm_detect_scan(
+		enum e_scan_types scan_type,
+		u_int16_t urg,
+		u_int16_t ack,
+		u_int16_t psh,
+		u_int16_t rst,
+		u_int16_t syn,
+		u_int16_t fin
+		)
+{
+	// SYN
+	if ((scan_type & SYN_F) && (syn & 0x1 ) && (ack & 0x1))
+		printf("--OPEN-- SCAN SYN\n");
+	// NULL
+	else if ((scan_type & NULL_F) && (rst & 0x1))
+		printf("--CLOSE-- SCAN NULL");
+	// FIN
+	else if ((scan_type & FIN_F) && (rst & 0x1))
+		printf("--CLOSE-- SCAN FIN");
+	// XMAS
+	else if ((scan_type & XMAS_F) && (rst & 0x1))
+		printf("--CLOSE-- SCAN XMAS");
+	// ACK
+	else if ((scan_type & ACK_F) && (rst & 0x1))
+		printf("--UNFILTRED-- SCAN ACK\n");
+
+}
 
 void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *packet)
 {
@@ -73,8 +73,8 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 	(tcp->ack & 0x1) ? printf("ACK on\n") : printf("ACK off\n");
 	(tcp->urg & 0x1) ? printf("URG on\n") : printf("URG off\n");
 
-	// nm_detect_scan(ACK_F,
-			// tcp->urg, tcp->ack, tcp->psh, tcp->rst, tcp->syn, tcp->fin);
+	nm_detect_scan(ACK_F,
+			tcp->urg, tcp->ack, tcp->psh, tcp->rst, tcp->syn, tcp->fin);
 /*
 	(tcp->fin & 0x1) ? printf("FIN on\n") : printf("FIN off\n");
 	(tcp->syn & 0x1) ? printf("SYN on\n") : printf("SYN off\n");
