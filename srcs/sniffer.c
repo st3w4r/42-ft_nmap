@@ -1,6 +1,7 @@
 #include "ft_nmap.h"
 
 // Scan Detection Receive Response
+
 void nm_detect_scan(
 		enum e_scan_types scan_type,
 		u_int16_t urg,
@@ -78,6 +79,7 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 	// printf("DATA SNIFFER: %s\n", data_sniffer->ip_str);
 	nm_detect_scan(data_sniffer->scan_type,
 			tcp->urg, tcp->ack, tcp->psh, tcp->rst, tcp->syn, tcp->fin);
+
 /*
 	(tcp->fin & 0x1) ? printf("FIN on\n") : printf("FIN off\n");
 	(tcp->syn & 0x1) ? printf("SYN on\n") : printf("SYN off\n");
@@ -106,13 +108,14 @@ void	 *nm_th_sniffer(void * data)
 			, data_sniffer.seq, data_sniffer.ack_seq, data_sniffer.flags);
 
 
-	printf("Dans thread data_sniffer: %s flag: %d\n", data_sniffer.filter_exp, data_sniffer.flags);
+
+	// printf("Dans thread data_sniffer: %s flag: %d\n", data_sniffer.filter_exp, data_sniffer.flags);
 	nm_sniffer(data_sniffer.filter_exp, buf, ip, tcp, data_sniffer);
-	printf("Sortie de thread\n");
+	// printf("Sortie de thread\n");
 	// usleep((rand() % 4000000));
 	// printf("Bonjour\n");
 	// int ret = 1;
-	// pthread_exit(&ret);
+	pthread_exit(NULL);
 	return (1);
 }
 
@@ -127,33 +130,32 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, struct tcphdr *tcp, 
 	struct pcap_pkthdr header;
 	const u_char *packet;
 
+	pthread_mutex_lock(&g_struct.pcap_init_mutex);
 	if (pcap_lookupnet(dev, &net, &mask, errbuf) == -1)
 	{
 		fprintf(stderr, "Can't get netmask: %s:%s\n", dev, errbuf);
 		net = 0;
 		mask = 0;
 	}
-
 	handle = pcap_open_live(dev, BUFSIZ, 1, 500, errbuf);
 	if (handle == NULL)
 	{
 		fprintf(stderr, "Couldn't open device: %s:%s\n", dev, errbuf);
 		exit(2);
 	}
-
 	if (pcap_compile(handle, &fp, filter_exp, 1, net) == -1)
 	{
 		fprintf(stderr, "Couldn't compile filter: %s:%s\n",
 				filter_exp, pcap_geterr(handle));
 		exit(2);
 	}
-
 	if (pcap_setfilter(handle, &fp) == -1)
 	{
 		fprintf(stderr, "Couldn't set filter: %s:%s\n",
 				filter_exp, pcap_geterr(handle));
 		exit(2);
 	}
+	pthread_mutex_unlock(&g_struct.pcap_init_mutex);
 
 	sendto(data_sniffer.socket, buf, ip->ip_len, 0, (struct sockaddr*)&data_sniffer.sin, sizeof(struct sockaddr));
 	int ret = pcap_dispatch(handle, 1, nm_capture_packet, (unsigned char *)&data_sniffer);

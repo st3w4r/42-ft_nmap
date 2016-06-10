@@ -20,6 +20,7 @@
 
 # define PACKET_BUF_SIZE 40
 
+
 enum		e_flags_tcp
 {
 	F_TCP_URG = 1 << 0,
@@ -96,6 +97,7 @@ typedef struct   s_struct
   t_store	*sotre; // Array of struct s_store
 	pthread_t *th_sniffer; //Array of thread
 	int *thread_occupied;
+	pthread_mutex_t pcap_init_mutex;
 	int (*ptr_init_fun[11]) ();
 }                t_struct;
 

@@ -36,7 +36,7 @@ void	nm_loop()
 	int s;
 	struct sockaddr_in sin;
 	char *buf;
-	unsigned int flags;
+	unsigned int flags = 0;
 	s = nm_open_socket();
 
 	sin.sin_family = AF_INET;
@@ -70,6 +70,9 @@ void nm_ip_loop(int s, struct sockaddr_in sin, unsigned int flags)
 		nm_ports_loop(g_struct.ip_store[i].content, s, sin, flags);
 		i++;
 	}
+	free_threads();
+	pthread_exit(NULL);
+
 
 }
 
@@ -108,13 +111,13 @@ int free_threads()
 		// {
 			if ((ret = pthread_join(g_struct.th_sniffer[j], NULL)) == 0)
 			{
-				g_struct.thread_occupied[j] = 0;
+				// g_struct.thread_occupied[j] = 0;
 				g_struct.thread_free--;
-				check++;
-				printf("Liberation du thread: %d, thread_free: %d\n", j, g_struct.thread_free);
+				// check++;
+				// printf("Liberation du thread: %d, thread_free: %d\n", j, g_struct.thread_free);
 			}
-			// if (check != g_struct.speedup - 1)
-			// 	j = -1;
+		// 	if (check == 0)
+		// 		j = -1;
 		// }
 		j++;
 	}
@@ -132,16 +135,16 @@ void nm_scans_loop(t_th_sniffer *data_sniffer, unsigned short port_dst, char *ip
 
 			// if (g_struct.thread_free < g_struct.speedup)
 			// {
-				if (g_struct.thread_free == g_struct.speedup)
+				if (g_struct.thread_free == g_struct.speedup - 1)
 					free_threads();
 				data_sniffer = nm_build_data_sniffer(port_dst, s, ip_str, sin, (1 << i));
 				// data_sniffer->flags = nm_build_flag((1 << i));
 
 				if (pthread_create(&g_struct.th_sniffer[g_struct.thread_free], NULL, (void*)&nm_th_sniffer, (void*)data_sniffer) == 0)
 				{
-					// g_struct.thread_occupied[g_struct.thread_free] = 1;
+					g_struct.thread_occupied[g_struct.thread_free] = 1;
+					// printf("Creation du thread : %d/%d, port: %d, scan type %d\n", g_struct.thread_free, g_struct.speedup, port_dst, data_sniffer->flags);
 					g_struct.thread_free++;
-					printf("Creation du thread : %d/%d, port: %d, scan type %d\n", g_struct.thread_free, g_struct.speedup, port_dst, data_sniffer->flags);
 					i++;
 				}
 			// }
@@ -160,7 +163,6 @@ void nm_scans_loop(t_th_sniffer *data_sniffer, unsigned short port_dst, char *ip
 void nm_ports_loop(char *ip_str, int s, struct sockaddr_in sin, unsigned int flags)
 {
 	int port;
-	int i;
 
 	port = 0;
 	while (port < 1024)
@@ -174,14 +176,12 @@ void nm_ports_loop(char *ip_str, int s, struct sockaddr_in sin, unsigned int fla
 		}
 		port++;
 	}
-	free_threads();
-
+	printf("Dernier free\n");
 }
 
 t_th_sniffer *nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str, struct sockaddr_in sin, enum e_scan_types type)
 {
 	t_th_sniffer *data_sniffer;
-
 	data_sniffer = (t_th_sniffer*)malloc(sizeof(t_th_sniffer));
 
 	data_sniffer->filter_exp = ft_strdup(nm_build_filter(port_dst, ip_str));
@@ -194,7 +194,6 @@ t_th_sniffer *nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str
 	data_sniffer->sin = sin;
 	data_sniffer->flags = nm_build_flag(type);
 	data_sniffer->scan_type = type;
-
 
 	return data_sniffer;
 }
