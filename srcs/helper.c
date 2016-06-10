@@ -41,20 +41,15 @@ unsigned short	nm_checksum(unsigned short *data, int len)
 	return (unsigned short)(~checksum);
 }
 
-unsigned short	nm_pseudo_header_checksum(char *buf, u_int size_ip, char *protocol)
+unsigned short	nm_pseudo_header_checksum(char *buf, u_int size_ip, u_int size_protocol)
 {
 	struct iphdr		*ip;
 	char						*header;
 	t_pseudo_header	pseudo_hdr;
-	unsigned short		checksum;
-	char				*buf_cal;
-	unsigned int size_protocol;
+	unsigned short	checksum;
+	char						*buf_cal;
 
 	ip = (struct iphdr*)(buf);
-	if (ft_strcmp("udp", protocol) == 0)
-		size_protocol = sizeof(struct udphdr);
-	else
-		size_protocol = sizeof(struct tcphdr);
 	header = (buf + size_ip);
 
 	pseudo_hdr.saddr = ip->saddr;
