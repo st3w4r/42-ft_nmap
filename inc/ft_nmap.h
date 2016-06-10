@@ -19,7 +19,6 @@
 # include <pthread.h>
 
 # define PACKET_BUF_SIZE 40
-# define NB_SCAN_TYPES 6 //Number of e_scan_types
 
 enum		e_flags_tcp
 {
@@ -112,6 +111,7 @@ typedef struct		s_th_sniffer
 	int socket;
 	char *ip_str;
 	char *buf;
+	enum e_scan_types scan_type;
 }					t_th_sniffer;
 
 
