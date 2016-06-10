@@ -20,6 +20,14 @@
 
 # define PACKET_BUF_SIZE 40
 
+enum		e_scan_result
+{
+	F_RESULT_OPEN = 1 << 0,
+	F_RESULT_CLOSE = 1 << 1,
+	F_RESULT_FILTERED = 1 << 2,
+	F_RESULT_UNFILTERED = 1 << 3,
+	F_RESULT_OPEN_FILTERED = 1 << 4
+};
 
 enum		e_flags_tcp
 {
@@ -71,23 +79,23 @@ typedef struct	s_port_result
 	int			port;
 	int			type; // e_scan_types
 	int			results;
-	t_bool	conslusion;
+	t_bool	conclusion;
 	char		*service_name;
 
 }				t_port_result;
 
 typedef struct	s_store
 {
-	char			*ip;
+	char					*ip;
 	t_port_result	*ports_results;
-}				t_store;
+}								t_store;
 
 typedef struct	s_service
 {
-  char			*name;
-  unsigned int	port;
-  char			*protocol;
-}				t_service;
+  char					*name;
+  u_int					port;
+  char					*protocol;
+}								t_service;
 
 typedef struct   s_struct
 {
@@ -118,6 +126,7 @@ typedef struct		s_th_sniffer
 	char *ip_str;
 	char *buf;
 	enum e_scan_types scan_type;
+	enum e_scan_result scan_result;
 }					t_th_sniffer;
 
 

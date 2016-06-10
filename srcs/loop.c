@@ -131,7 +131,6 @@ void nm_scans_loop(unsigned short port_dst, char *ip_str, int s, struct sockaddr
 	{
 		if (g_struct.types & (1 << i))
 		{
-
 			t_th_sniffer *data_sniffer;
 			data_sniffer = nm_build_data_sniffer(port_dst, s, ip_str, sin, (1 << i));
 
@@ -159,6 +158,7 @@ void nm_ports_loop(char *ip_str, int s, struct sockaddr_in sin, unsigned int fla
 	{
 		if (g_struct.ports[port] == 1)
 			nm_scans_loop(port, ip_str, s, sin);
+
 		port++;
 	}
 
