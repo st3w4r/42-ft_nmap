@@ -25,11 +25,21 @@ enum e_scan_result	nm_detect_scan(
 		printf("--CLOSE-- SCAN SYN\n");
 		result = F_RESULT_CLOSE;
 	}
+	else if ((scan_type & SYN_F) && (timeout == TRUE))
+	{
+		printf("--FILTERED-- SCAN SYN\n");
+		result = F_RESULT_FILTERED;
+	}
 	// NULL
 	else if ((scan_type & NULL_F) && (rst & 0x1))
 	{
 		printf("--CLOSE-- SCAN NULL\n");
 		result = F_RESULT_CLOSE;
+	}
+	else if ((scan_type & NULL_F) && (timeout == TRUE))
+	{
+		printf("--OPEN FILTERED-- SCAN NULL\n");
+		result = F_RESULT_OPEN_FILTERED;
 	}
 	// FIN
 	else if ((scan_type & FIN_F) && (rst & 0x1))
@@ -37,20 +47,41 @@ enum e_scan_result	nm_detect_scan(
 		printf("--CLOSE-- SCAN FIN\n");
 		result = F_RESULT_CLOSE;
 	}
+	else if ((scan_type & FIN_F) && (timeout == TRUE))
+	{
+		printf("--OPEN FILTERED-- SCAN FIN\n");
+		result = F_RESULT_OPEN_FILTERED;
+	}
 	// XMAS
 	else if ((scan_type & XMAS_F) && (rst & 0x1))
 	{
 		printf("--CLOSE-- SCAN XMAS\n");
 		result = F_RESULT_CLOSE;
 	}
+	else if ((scan_type & XMAS_F) && (timeout == TRUE))
+	{
+		printf("--OPEN FILTERED-- SCAN XMAS\n");
+		result = F_RESULT_OPEN_FILTERED;
+	}
+	// UDP
+	else if ((scan_type & UDP_F) && (timeout == TRUE))
+	{
+		printf("--OPEN FILTERED-- SCAN UDP\n");
+		result = F_RESULT_OPEN_FILTERED;
+	}
 	// ACK
 	else if ((scan_type & ACK_F) && (rst & 0x1))
 	{
-		printf("--UNFILTRED-- SCAN ACK\n");
+		printf("--UNFILTERED-- SCAN ACK\n");
 		result = F_RESULT_UNFILTERED;
 	}
-	else if (timeout == TRUE)
-		printf("--TIMEOUT--\n");
+	else if ((scan_type & ACK_F) && (timeout == TRUE))
+	{
+		printf("--FILTERED-- SCAN ACK\n");
+		result = F_RESULT_FILTERED;
+	}
+	// else if (timeout == TRUE)
+	// 	printf("--TIMEOUT--\n");
 
 	return (result);
 }
@@ -188,7 +219,7 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, t_th_sniffer data_sn
 	sendto(data_sniffer.socket, buf, ip->ip_len, 0, (struct sockaddr*)&data_sniffer.sin, sizeof(struct sockaddr));
 	int ret = pcap_dispatch(handle, 1, nm_capture_packet, (unsigned char *)&data_sniffer);
 	if (ret == 0)
-		nm_detect_scan(data_sniffer.scan_type, TRUE, 0, 0, 0, 0, 0, 0);
+		data_sniffer.scan_result = nm_detect_scan(data_sniffer.scan_type, TRUE, 0, 0, 0, 0, 0, 0);
 	// 	printf("Ret: %d\n", ret);
 
 	pcap_close(handle);
