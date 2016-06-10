@@ -104,9 +104,12 @@ void	 *nm_th_sniffer(void * data)
 
 
 	printf("Dans thread data_sniffer: %s flag: %d\n", data_sniffer.filter_exp, data_sniffer.flags);
-	// usleep((rand() % 4000000));
-	nm_sniffer(data_sniffer.filter_exp, buf, ip, tcp, data_sniffer);
+	// nm_sniffer(data_sniffer.filter_exp, buf, ip, tcp, data_sniffer);
 	printf("Sortie de thread\n");
+	usleep((rand() % 4000000));
+	printf("Bonjour\n");
+	// int ret = 1;
+	// pthread_exit(&ret);
 	return (1);
 }
 
