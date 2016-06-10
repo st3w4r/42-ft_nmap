@@ -82,8 +82,8 @@ struct udphdr		*nm_configure_packet_udp(char *buf,
 	ip = (struct iphdr*)(buf);
 	udp = (struct udphdr*)(buf + (ip->ihl * 4));
 
-	udp->source = port_src;
-	udp->dest = port_dst;
+	udp->source = htons(port_src);
+	udp->dest = htons(port_dst);
 	udp->len = htons(sizeof(struct udphdr));
 	udp->check = 0;
 	udp->check = nm_pseudo_header_checksum(buf, ip->ihl * 4);

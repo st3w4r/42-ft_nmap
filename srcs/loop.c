@@ -123,7 +123,7 @@ int free_threads()
 	return (1);
 }
 
-void nm_scans_loop(t_th_sniffer *data_sniffer, unsigned short port_dst, char *ip_str, int s, struct sockaddr_in sin)
+void nm_scans_loop(unsigned short port_dst, char *ip_str, int s, struct sockaddr_in sin)
 {
 	int i = 0;
 
@@ -132,6 +132,7 @@ void nm_scans_loop(t_th_sniffer *data_sniffer, unsigned short port_dst, char *ip
 		if (g_struct.types & (1 << i))
 		{
 
+			t_th_sniffer *data_sniffer;
 			data_sniffer = nm_build_data_sniffer(port_dst, s, ip_str, sin, (1 << i));
 
 			if (g_struct.thread_free == g_struct.speedup - 1)
@@ -157,12 +158,7 @@ void nm_ports_loop(char *ip_str, int s, struct sockaddr_in sin, unsigned int fla
 	while (port < 1024)
 	{
 		if (g_struct.ports[port] == 1)
-		{
-			t_th_sniffer data_sniffer;
-			// if (g_struct.thread_free == g_struct.speedup - 1)
-				// free_threads();
-			nm_scans_loop(&data_sniffer, port, ip_str, s, sin);
-		}
+			nm_scans_loop(port, ip_str, s, sin);
 		port++;
 	}
 
