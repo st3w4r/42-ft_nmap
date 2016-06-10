@@ -70,10 +70,9 @@ void nm_ip_loop(int s, struct sockaddr_in sin, unsigned int flags)
 		nm_ports_loop(g_struct.ip_store[i].content, s, sin, flags);
 		i++;
 	}
-	free_threads();
+	if (g_struct.thread_free > 0)
+		free_threads();
 	pthread_exit(NULL);
-
-
 }
 
 int nm_build_flag(enum e_scan_types type)
@@ -105,20 +104,20 @@ int free_threads()
 	j = 0;
 	ret = -1;
 	check = 0;
-	while (j < g_struct.speedup)
+	while (j <= g_struct.speedup)
 	{
-		// if (g_struct.thread_occupied[j] == 1)
-		// {
+		if (g_struct.thread_occupied[j] == 1)
+		{
 			if ((ret = pthread_join(g_struct.th_sniffer[j], NULL)) == 0)
 			{
-				// g_struct.thread_occupied[j] = 0;
+				g_struct.thread_occupied[j] = 0;
 				g_struct.thread_free--;
 				// check++;
-				// printf("Liberation du thread: %d, thread_free: %d\n", j, g_struct.thread_free);
+				printf("Liberation du thread: %d, thread_free: %d\n", j, g_struct.thread_free);
 			}
 		// 	if (check == 0)
 		// 		j = -1;
-		// }
+		}
 		j++;
 	}
 	return (1);
@@ -133,26 +132,20 @@ void nm_scans_loop(t_th_sniffer *data_sniffer, unsigned short port_dst, char *ip
 		if (g_struct.types & (1 << i))
 		{
 
-			// if (g_struct.thread_free < g_struct.speedup)
-			// {
-				if (g_struct.thread_free == g_struct.speedup - 1)
-					free_threads();
-				data_sniffer = nm_build_data_sniffer(port_dst, s, ip_str, sin, (1 << i));
-				// data_sniffer->flags = nm_build_flag((1 << i));
+			data_sniffer = nm_build_data_sniffer(port_dst, s, ip_str, sin, (1 << i));
 
-				if (pthread_create(&g_struct.th_sniffer[g_struct.thread_free], NULL, (void*)&nm_th_sniffer, (void*)data_sniffer) == 0)
-				{
-					g_struct.thread_occupied[g_struct.thread_free] = 1;
-					// printf("Creation du thread : %d/%d, port: %d, scan type %d\n", g_struct.thread_free, g_struct.speedup, port_dst, data_sniffer->flags);
-					g_struct.thread_free++;
-					i++;
-				}
-			// }
-			// else
-			// {
-			// 	// printf("Plus de Threads\n");
-			// 	free_threads();
-			// }
+			if (g_struct.thread_free == g_struct.speedup - 1)
+				free_threads();
+			if (pthread_create(&g_struct.th_sniffer[g_struct.thread_free], NULL, (void*)&nm_th_sniffer, (void*)data_sniffer) == 0)
+			{
+				g_struct.thread_occupied[g_struct.thread_free] = 1;
+				printf("Creation du thread : %d/%d, port: %d, scan type %d\n", g_struct.thread_free, g_struct.speedup, port_dst, data_sniffer->flags);
+				g_struct.thread_free++;
+				i++;
+			}
+		}
+		else
+			printf("Plus de Threads\n");
 		}
 		else
 			i++;
@@ -177,6 +170,7 @@ void nm_ports_loop(char *ip_str, int s, struct sockaddr_in sin, unsigned int fla
 		port++;
 	}
 	printf("Dernier free\n");
+
 }
 
 t_th_sniffer *nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str, struct sockaddr_in sin, enum e_scan_types type)
