@@ -13,7 +13,7 @@ int nm_open_socket()
 	return (s);
 }
 
-struct ip		*nm_configure_packet_ip(char *buf, char *ip_dst)
+struct ip		*nm_configure_packet_ip(char *buf, char *ip_dst, enum e_scan_types type)
 {
 	struct ip *ip;
 	char *addr;
@@ -26,7 +26,7 @@ struct ip		*nm_configure_packet_ip(char *buf, char *ip_dst)
 	ip->ip_id = 0;
 	ip->ip_off = 0;
 	ip->ip_ttl = 42;
-	ip->ip_p = (g_struct.types & UDP_F) ? IPPROTO_UDP : IPPROTO_TCP;
+	ip->ip_p = (type & UDP_F) ? IPPROTO_UDP : IPPROTO_TCP;
 	ip->ip_sum = 0;
 	addr = nm_get_ip_interface();
 	inet_pton(AF_INET, addr, &(ip->ip_src.s_addr));
@@ -69,24 +69,24 @@ struct tcphdr		*nm_configure_packet_tcp(char *buf,
 /*	printf("%4x\n",(tcp->check));
 	printf("%4x\n",htons(tcp->check));
 	printf("%4x\n",ntohs(tcp->check));
-*/	
+*/
 	return (tcp);
 }
 
-struct udphdr		*nm_configure_packet_udp(char *buf, u_int size_ip,
+struct udphdr		*nm_configure_packet_udp(char *buf,
 						unsigned short port_src, unsigned short port_dst)
 {
-	struct ip		*ip;
+	struct iphdr		*ip;
 	struct udphdr	*udp;
 
-	ip = (struct ip*)(buf);
-	udp = (struct udphdr*)(buf + size_ip);
+	ip = (struct iphdr*)(buf);
+	udp = (struct udphdr*)(buf + (ip->ihl * 4));
 
 	udp->source = port_src;
 	udp->dest = port_dst;
 	udp->len = htons(sizeof(struct udphdr));
 	udp->check = 0;
-	udp->check = nm_udp_checksum(buf, size_ip);
+	udp->check = nm_udp_checksum(buf, ip->ihl * 4);
 //	udp->check = htons(0x7c9e);
 	return (udp);
 }

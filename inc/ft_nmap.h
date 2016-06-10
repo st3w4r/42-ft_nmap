@@ -68,8 +68,12 @@ typedef struct	s_pseudo_header
 
 typedef struct	s_port_result
 {
-	int		port;
-	int		flags; // e_scan_types
+	int			port;
+	int			type; // e_scan_types
+	int			results;
+	t_bool	conslusion;
+	char		*service_name;
+
 }				t_port_result;
 
 typedef struct	s_store
@@ -167,13 +171,13 @@ unsigned short	nm_checksum(unsigned short *data, int len);
  ** Desc: Open socket and configure packet ip and tcp
  */
 int				nm_open_socket();
-struct ip		*nm_configure_packet_ip(char *buf, char *ip_dst);
+struct ip		*nm_configure_packet_ip(char *buf, char *ip_dst, enum e_scan_types type);
 struct tcphdr	*nm_configure_packet_tcp(char *buf,
 					unsigned short port_src, unsigned short port_dst,
 					u_int seq,
 					u_int ack_seq,
 					u_int flags);
-struct udphdr	*nm_configure_packet_udp(char *buf, u_int size_ip,
+struct udphdr	*nm_configure_packet_udp(char *buf,
 					unsigned short port_src, unsigned short port_dst);
 /**
  ** Name: loop.c
@@ -187,6 +191,6 @@ int nm_build_flag(enum e_scan_types type);
  ** Desc: Sniff the network and capture packets
  */
 void	 *nm_th_sniffer(void * data);
-void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, struct tcphdr *tcp, t_th_sniffer data_sniffer);
+void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, t_th_sniffer data_sniffer);
 
 #endif
