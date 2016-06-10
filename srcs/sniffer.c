@@ -14,7 +14,14 @@ void nm_detect_scan(
 {
 	// SYN
 	if ((scan_type & SYN_F) && (syn & 0x1 ) && (ack & 0x1))
+	{
 		printf("--OPEN-- SCAN SYN\n");
+
+	}
+	else if ((scan_type & SYN_F) && (rst & 0x1))
+	{
+		printf("--CLOSE-- SCAN SYN\n");
+	}
 	// NULL
 	else if ((scan_type & NULL_F) && (rst & 0x1))
 		printf("--CLOSE-- SCAN NULL\n");
@@ -103,14 +110,17 @@ void	 *nm_th_sniffer(void * data)
 
 	buf = malloc(PACKET_BUF_SIZE);
 	ft_memset(buf, 0, PACKET_BUF_SIZE);
-	ip = nm_configure_packet_ip(buf, data_sniffer.ip_str);
-	tcp = nm_configure_packet_tcp(buf, data_sniffer.port_src, data_sniffer.port_dst
+	ip = nm_configure_packet_ip(buf, data_sniffer.ip_str, data_sniffer.scan_type);
+	if (data_sniffer.scan_type & UDP_F)
+		udp = nm_configure_packet_udp(buf, data_sniffer.port_src, data_sniffer.port_dst);
+	else
+		tcp = nm_configure_packet_tcp(buf, data_sniffer.port_src, data_sniffer.port_dst
 			, data_sniffer.seq, data_sniffer.ack_seq, data_sniffer.flags);
 
 
 
 	// printf("Dans thread data_sniffer: %s flag: %d\n", data_sniffer.filter_exp, data_sniffer.flags);
-	nm_sniffer(data_sniffer.filter_exp, buf, ip, tcp, data_sniffer);
+	nm_sniffer(data_sniffer.filter_exp, buf, ip, data_sniffer);
 	// printf("Sortie de thread\n");
 	// usleep((rand() % 4000000));
 	// printf("Bonjour\n");
@@ -119,7 +129,7 @@ void	 *nm_th_sniffer(void * data)
 	return (1);
 }
 
-void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, struct tcphdr *tcp, t_th_sniffer data_sniffer)
+void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, t_th_sniffer data_sniffer)
 {
 	char dev[] = "eth0";
 	char errbuf[PCAP_ERRBUF_SIZE];
@@ -137,7 +147,7 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, struct tcphdr *tcp, 
 		net = 0;
 		mask = 0;
 	}
-	handle = pcap_open_live(dev, BUFSIZ, 1, 500, errbuf);
+	handle = pcap_open_live(dev, BUFSIZ, 1, 1000, errbuf);
 	if (handle == NULL)
 	{
 		fprintf(stderr, "Couldn't open device: %s:%s\n", dev, errbuf);

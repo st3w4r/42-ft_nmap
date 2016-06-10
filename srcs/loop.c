@@ -113,7 +113,7 @@ int free_threads()
 				g_struct.thread_occupied[j] = 0;
 				g_struct.thread_free--;
 				// check++;
-				printf("Liberation du thread: %d, thread_free: %d\n", j, g_struct.thread_free);
+				// printf("Liberation du thread: %d, thread_free: %d\n", j, g_struct.thread_free);
 			}
 		// 	if (check == 0)
 		// 		j = -1;
@@ -139,7 +139,7 @@ void nm_scans_loop(t_th_sniffer *data_sniffer, unsigned short port_dst, char *ip
 			if (pthread_create(&g_struct.th_sniffer[g_struct.thread_free], NULL, (void*)&nm_th_sniffer, (void*)data_sniffer) == 0)
 			{
 				g_struct.thread_occupied[g_struct.thread_free] = 1;
-				printf("Creation du thread : %d/%d, port: %d, scan type %d\n", g_struct.thread_free, g_struct.speedup, port_dst, data_sniffer->flags);
+				// printf("Creation du thread : %d/%d, port: %d, scan type %d\n", g_struct.thread_free, g_struct.speedup, port_dst, data_sniffer->flags);
 				g_struct.thread_free++;
 				i++;
 			}
@@ -149,7 +149,7 @@ void nm_scans_loop(t_th_sniffer *data_sniffer, unsigned short port_dst, char *ip
 		else
 			i++;
 	}
-	printf("Sortie de scan loop\n");
+	// printf("Sortie de scan loop\n");
 }
 
 void nm_ports_loop(char *ip_str, int s, struct sockaddr_in sin, unsigned int flags)
