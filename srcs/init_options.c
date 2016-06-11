@@ -16,22 +16,15 @@ int nm_init_speedup_opt(char *arg)
 {
   int speedup;
 
+	speedup = 1;
   if (!ft_is_number(arg))
     return (-1);
   speedup = ft_atoi(arg);
-  if (speedup < 0 || speedup > 250)
+  if (speedup <= 0 || speedup > 250)
     return (-1);
   else
     g_struct.speedup = speedup;
-	g_struct.thread_occupied = (int*)malloc(sizeof(int) * g_struct.speedup);
-	int i = 0;
-	while (i < speedup)
-	{
-		g_struct.thread_occupied[i] = 0;
-		i++;
-	}
 	g_struct.th_sniffer = (pthread_t*)malloc(sizeof(pthread_t) * g_struct.speedup);
-	// g_struct.th_store[g_struct.speedup];
   return (0);
 }
 

@@ -98,7 +98,7 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 
 	data_sniffer = (t_th_sniffer *)user;
 	ethernet = (struct ethhdr*)(packet);
-	printf("Ethernet: %u\n", ethernet->h_proto);
+	// printf("Ethernet: %u\n", ethernet->h_proto);
 
 	ip = (struct ip*)(packet + ETH_HLEN);
 
@@ -108,8 +108,8 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 		return ;
 	}
 
-	printf("IP SRC sniffed: %s\n", inet_ntoa(ip->ip_src));
-	printf("IP DST sniffed: %s\n", inet_ntoa(ip->ip_dst));
+	// printf("IP SRC sniffed: %s\n", inet_ntoa(ip->ip_src));
+	// printf("IP DST sniffed: %s\n", inet_ntoa(ip->ip_dst));
 
 	tcp = (struct tcphdr*)(packet + ETH_HLEN + size_ip);
 
@@ -119,18 +119,18 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 		return ;
 	}
 	payload = (u_char *)(packet + ETH_HLEN + size_ip + size_tcp);
-	printf("TCP SRC port: %u ", ntohs(tcp->source));
-	printf("TCP DST port: %u ", ntohs(tcp->dest));
-	printf("TCP SEQ: %u ", ntohl(tcp->seq));
-	printf("TCP ACK: %u ", ntohl(tcp->ack_seq));
-	printf("FLAGS:\n");
-
-	(tcp->fin & 0x1) ? printf("FIN on\n") : printf("FIN off\n");
-	(tcp->syn & 0x1) ? printf("SYN on\n") : printf("SYN off\n");
-	(tcp->rst & 0x1) ? printf("RST on\n") : printf("RST off\n");
-	(tcp->psh & 0x1) ? printf("PUSH on\n") : printf("PUSH off\n");
-	(tcp->ack & 0x1) ? printf("ACK on\n") : printf("ACK off\n");
-	(tcp->urg & 0x1) ? printf("URG on\n") : printf("URG off\n");
+	// printf("TCP SRC port: %u ", ntohs(tcp->source));
+	// printf("TCP DST port: %u ", ntohs(tcp->dest));
+	// printf("TCP SEQ: %u ", ntohl(tcp->seq));
+	// printf("TCP ACK: %u ", ntohl(tcp->ack_seq));
+	// printf("FLAGS:\n");
+	//
+	// (tcp->fin & 0x1) ? printf("FIN on\n") : printf("FIN off\n");
+	// (tcp->syn & 0x1) ? printf("SYN on\n") : printf("SYN off\n");
+	// (tcp->rst & 0x1) ? printf("RST on\n") : printf("RST off\n");
+	// (tcp->psh & 0x1) ? printf("PUSH on\n") : printf("PUSH off\n");
+	// (tcp->ack & 0x1) ? printf("ACK on\n") : printf("ACK off\n");
+	// (tcp->urg & 0x1) ? printf("URG on\n") : printf("URG off\n");
 
 	// printf("DATA SNIFFER: %s\n", data_sniffer->ip_str);
 	data_sniffer->scan_result = nm_detect_scan(data_sniffer->scan_type, FALSE,
@@ -174,7 +174,7 @@ void	 *nm_th_sniffer(void * data)
 	// usleep((rand() % 4000000));
 	// printf("Bonjour\n");
 	// int ret = 1;
-	pthread_exit(NULL);
+	// pthread_exit(NULL);
 	return (1);
 }
 
@@ -220,7 +220,43 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, t_th_sniffer data_sn
 	int ret = pcap_dispatch(handle, 1, nm_capture_packet, (unsigned char *)&data_sniffer);
 	if (ret == 0)
 		data_sniffer.scan_result = nm_detect_scan(data_sniffer.scan_type, TRUE, 0, 0, 0, 0, 0, 0);
-	// 	printf("Ret: %d\n", ret);
+	// typedef struct	s_port_result
+	// {
+	// 	int			port;
+	// 	int			type; // e_scan_types
+	// 	int			results;
+	// 	t_bool	conclusion;
+	// 	char		*service_name;
+	//
+	// }				t_port_result;
+	//
+	// typedef struct	s_store
+	// {
+	// 	char					*ip;
+	// 	t_port_result	*ports_results;
+	// 	struct s_stone *next;
+	// }
+	pthread_mutex_lock(&g_struct.store_mutex);
+
+		t_store *ptr = NULL;
+		ptr = g_struct.store;
+
+		while(ptr->next != NULL)
+			ptr = ptr->next;
+		ptr->ports_results = (t_port_result*)malloc(sizeof(t_port_result));
+
+		ptr->ip = ft_strdup(data_sniffer.ip_str);
+		ptr->ports_results->port = data_sniffer.port_dst;
+		ptr->ports_results->results = data_sniffer.scan_result;
+		ptr->ports_results->type = data_sniffer.scan_type;
+		ptr->ports_results->conclusion = TRUE;
+		ptr->ports_results->service_name = ft_strdup("Roger");
+
+		ptr->next = (t_store*)malloc(sizeof(t_store));
+		ptr = ptr->next;
+		ptr->next = NULL;
+	pthread_mutex_unlock(&g_struct.store_mutex);
+
 
 	pcap_close(handle);
 }

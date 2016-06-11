@@ -43,12 +43,12 @@ unsigned short	nm_checksum(unsigned short *data, int len)
 
 unsigned short	nm_pseudo_header_checksum(char *buf, u_int size_ip)
 {
-	struct iphdr		*ip;
 	char						*header;
 	t_pseudo_header	pseudo_hdr;
 	unsigned short	checksum;
 	char						*buf_cal;
 	u_int						size_protocol;
+	struct iphdr		*ip;
 
 	ip = (struct iphdr*)(buf);
 	header = (buf + size_ip);

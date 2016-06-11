@@ -12,7 +12,7 @@ int nm_ports_opt_get_range(char *ports)
     return (-1);
   start = ft_atoi(arr_range[0]);
   end = ft_atoi(arr_range[1]);
-  if ((start < 0 || start > 1024) || (end < 0 || end > 1024))
+  if (start < 0 || start > 1024 || end < 0 || end > 1024)
     return (-1);
   while(start <= end)
   {

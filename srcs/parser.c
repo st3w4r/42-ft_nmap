@@ -17,7 +17,10 @@ int             nm_argv_parser(char **argv, int argc)
     if ((opt = nm_cmp_args(argv[i], tabargs)) > -1)
     {
       if (nm_init_fun(argv[i + 1], opt, argtype, tabargs) == -1)
-        return (-1);
+			{
+				nm_arg_error(argv[i + 1]);
+				return (-1);
+			}
     }
     else
       return (nm_arg_error(argv[i]));
@@ -40,11 +43,6 @@ int             nm_arg_type(char *arg)
     return (0);
 }
 
-/** execute la
-** si argtype == 2 (ex: --scan)
-** elle execute la fonction avec l'argument suivant l'option
-** ex: --scan UDP -> ptr_init_fun(UDP)
-*/
 int           nm_init_fun(char *arg, int opt, int argtype, char **tabargs)
 {
   g_struct.flags |= 1 << opt;
@@ -70,6 +68,7 @@ int             nm_arg_error(char *arg)
 {
   printf("nmap: illegal option: %s\n", arg);
   nm_usage();
+	exit(0);
   return (-1);
 }
 /* nm_cmp_args
@@ -81,7 +80,7 @@ int             nm_cmp_args(char *arg, char **tabargs)
 {
   int i;
 
-  i             = 0;
+  i = 0;
   while (tabargs[i])
   {
     if (ft_strcmp(tabargs[i], arg) == 0)
