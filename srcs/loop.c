@@ -163,7 +163,7 @@ char *nm_build_filter(unsigned short ports_dst, char *ip_str)
 {
 	char *str;
 	char *port;
-	
+
 	port = NULL;
 	str = NULL;
 	str = (char*)malloc(1000);
