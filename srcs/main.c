@@ -57,7 +57,7 @@ void 							nm_display()
 			if (port == ptr->ports_results->port)
 			{
 				if (check_p == 0)
-					printf("%-15s %-20s %-10d ", ptr->ip, "Unassigned", ptr->ports_results->port);
+					printf("%-15s %-20s %-10d ", ptr->ip, ptr->ports_results->service_name, ptr->ports_results->port);
 				nm_display_scan_type(ptr->ports_results->type, ptr->ports_results->results);
 				if (ptr->ports_results->results & F_RESULT_OPEN)
 					open = 1;

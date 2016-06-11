@@ -13,7 +13,7 @@ char	*nm_get_service_name(int port, char *protocol)
 		{ "https", 443, "udp" },
 		{ 0, 0, 0 }
 	};
-	
+
 	i = 0;
 	while (services_list[i].name != NULL)
 	{
