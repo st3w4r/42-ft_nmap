@@ -2,10 +2,6 @@
 
 /* Ne pas oublier de remettre les Flags */
 
-void nm_header_informations()
-{
-	// Ici mettre les information avant le scan des ports
-}
 
 char *nm_display_scan_result(int result)
 {
@@ -21,6 +17,7 @@ char *nm_display_scan_result(int result)
 		return("open|filtered");
 	return("unreachable");
 }
+
 
 void nm_display_scan_type(int type, int result)
 {
@@ -83,15 +80,6 @@ void 							nm_display()
 
 void nm_display_header()
 {
-// 	Scan Configurations
-// Target Ip-Address : x.x.x.x
-// No of Ports to scan : 10
-// Scans to be performed : SYN NULL FIN XMAS ACK UDP
-// No of threads : 200
-// Scanning..
-// ................
-// Scan took 16.21338 sec
-
 	int i;
 
 	i = 0;
@@ -112,8 +100,8 @@ void nm_display_header()
 		i++;
 	}
 	printf("\nNo of threads: %d\n", g_struct.speedup);
-
 }
+
 int               main(int argc, char **argv)
 {
 	if (getuid() != 0)
