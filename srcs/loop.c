@@ -1,9 +1,14 @@
  #include "ft_nmap.h"
+
+ double timedifference_sec(struct timeval t0, struct timeval t1)
+ {
+   return (t1.tv_sec - t0.tv_sec);
+ }
+
  double timedifference_msec(struct timeval t0, struct timeval t1)
  {
-		//  return (t1.tv_sec - t0.tv_sec) * 10.0f + (t1.tv_usec - t0.tv_usec) / 10.0f;
-		// return t1.tv_sec;
-   return (t1.tv_sec - t0.tv_sec);
+	//  return (t1.tv_sec - t0.tv_sec) * 1000.0f + (t1.tv_usec - t0.tv_usec) / 1000.0f;
+	 return (t1.tv_usec - t0.tv_usec) / 1000.0f;
  }
 
 void nm_recevie_once(int socket)
@@ -63,6 +68,11 @@ void nm_ip_loop(int s, struct sockaddr_in sin)
 		i++;
 	}
 	gettimeofday(&g_struct.rtt.end, NULL);
+	double ttime_msec = 0.0;
+	double ttime_sec = 0.0;
+	ttime_msec = timedifference_msec(g_struct.rtt.start, g_struct.rtt.end);
+	ttime_sec = timedifference_sec(g_struct.rtt.start, g_struct.rtt.end);
+	printf("Scan took: %.0f.%.0fsec\n", ttime_sec,ttime_msec);
 	free_threads();
 }
 
@@ -151,9 +161,7 @@ void nm_ports_loop(char *ip_str, int s, struct sockaddr_in sin)
 		port++;
 	}
 	write(1, "\n", 1);
-	double ttime = 0.0;
-	ttime = timedifference_msec(g_struct.rtt.start, g_struct.rtt.end);
-	printf("%lds", ttime);
+
 }
 
 t_th_sniffer *nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str, struct sockaddr_in sin, enum e_scan_types type)
