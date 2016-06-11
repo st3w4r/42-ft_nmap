@@ -25,7 +25,7 @@ struct ip		*nm_configure_packet_ip(char *buf, char *ip_dst, enum e_scan_types ty
 	ip->ip_len = sizeof(struct iphdr) + ((type & UDP_F) ? sizeof(struct udphdr) : sizeof(struct tcphdr));// htons(sizeof(buf));
 	ip->ip_id = 0;
 	ip->ip_off = 0;
-	ip->ip_ttl = 42;
+	ip->ip_ttl = g_struct.ttl;
 	ip->ip_p = (type & UDP_F) ? IPPROTO_UDP : IPPROTO_TCP;
 	ip->ip_sum = 0;
 	addr = nm_get_ip_interface();

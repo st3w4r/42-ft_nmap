@@ -94,7 +94,7 @@ char**          nm_get_args()
 {
   char **tabargs;
 
-  tabargs       = (char **)malloc(sizeof(char *) * 12);
+  tabargs       = (char **)malloc(sizeof(char *) * 13);
   tabargs[0]    = ft_strdup("--help");
   tabargs[1]    = ft_strdup("--ports");
   tabargs[2]    = ft_strdup("--ip");
@@ -103,10 +103,11 @@ char**          nm_get_args()
   tabargs[5]    = ft_strdup("--scan");
   tabargs[6]    = ft_strdup("--spoof-mac");
   tabargs[7]    = ft_strdup("--ttl");
-  tabargs[8]    = ft_strdup("-O");
-  tabargs[9]    = ft_strdup("-S");
-  tabargs[10]   = ft_strdup("-g");
-  tabargs[11]   = NULL;
+	tabargs[8]		= ft_strdup("--pt");
+  tabargs[9]    = ft_strdup("-O");
+  tabargs[10]		= ft_strdup("-S");
+	tabargs[11]   = ft_strdup("-g");
+  tabargs[12]   = NULL;
 
   return (tabargs);
 }
@@ -118,7 +119,9 @@ int            nm_usage()
   printf("--ports ports to scan (eg: (start) 1-10 (end) or 1,2,3 or 1,5-15)\n");
   printf("--ip ip addresses to scan in dot format\n");
   printf("--file File name containing IP addresses to scan,\n");
-  printf("--speedup [250 max] number of parallel threads to use\n");
+	printf("--speedup [250 max] number of parallel threads to use\n");
+	printf("--ttl (time to live) 1-255\n");
+  printf("--pt (packet time) 1-10 sec\n");
   printf("--scan SYN/NULL/FIN/XMAS/ACK/UDP\n");
   return (-1);
 }

@@ -180,7 +180,7 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, t_th_sniffer data_sn
 		net = 0;
 		mask = 0;
 	}
-	handle = pcap_open_live(dev, BUFSIZ, 1, 500, errbuf);
+	handle = pcap_open_live(dev, BUFSIZ, 1, g_struct.packet_time, errbuf);
 	if (handle == NULL)
 	{
 		fprintf(stderr, "Couldn't open device: %s:%s\n", dev, errbuf);

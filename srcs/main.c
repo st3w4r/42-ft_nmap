@@ -86,13 +86,14 @@ void nm_display_header()
 	while (g_struct.ip_store[i].content)
 		i++;
 
-	printf("Scan Configurations\n");
+	printf("\n\nScan Configurations\n-------------------------------\n");
 	if (i == 1)
 		printf("Target Ip-Address : %s\n", g_struct.ip_store[0].content);
 	else
 		printf("Target Ip-Address : multiple\n");
 	i = 0;
 	int j = 0;
+	printf("Ttl : %d\n", g_struct.ttl );
 	while (i < 1025)
 	{
 		if (g_struct.ports[i] == 1)

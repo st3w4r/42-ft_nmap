@@ -117,7 +117,8 @@ typedef struct   s_struct
   int flags;
   int speedup;
   int types;
-  int ttl;
+	int ttl;
+  int packet_time;
 	int *ports;
 	int thread_free;
   t_list *ip_store; // Linked list of string ip
@@ -128,7 +129,7 @@ typedef struct   s_struct
 	int *thread_occupied;
 	pthread_mutex_t pcap_init_mutex;
 	pthread_mutex_t store_mutex;
-	int (*ptr_init_fun[11]) ();
+	int (*ptr_init_fun[12]) ();
 }                t_struct;
 
 typedef struct		s_th_sniffer
@@ -150,6 +151,7 @@ typedef struct		s_th_sniffer
 
 t_struct g_struct;
 
+int							nm_init_pt_opt(char *arg);
 char		*getIP(char *str);
 /* Parser.c */
 void printBits(unsigned int num);

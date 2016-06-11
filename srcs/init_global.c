@@ -20,16 +20,18 @@ void nm_g_struct_init_fun(void)
   g_struct.ptr_init_fun[5] = nm_init_scan_opt;
   g_struct.ptr_init_fun[6] = nm_init_spoof_opt;
   g_struct.ptr_init_fun[7] = nm_init_ttl_opt;
-  g_struct.ptr_init_fun[8] = nm_init_o_opt;
-  g_struct.ptr_init_fun[9] = nm_init_s_opt;
-  g_struct.ptr_init_fun[10] = nm_init_g_opt;
+	g_struct.ptr_init_fun[8] = nm_init_pt_opt;
+  g_struct.ptr_init_fun[9] = nm_init_o_opt;
+  g_struct.ptr_init_fun[10] = nm_init_s_opt;
+	g_struct.ptr_init_fun[11] = nm_init_g_opt;
 
 }
 
 void nm_g_struct_init()
 {
   g_struct.flags = 0x0;
-  g_struct.ttl = 60;
+	g_struct.ttl = 60;
+  g_struct.packet_time = 1000;
 	g_struct.th_sniffer = NULL;
 	g_struct.thread_free = 0;
   g_struct.types = 0x003F;

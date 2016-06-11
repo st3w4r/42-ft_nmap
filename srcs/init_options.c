@@ -64,10 +64,23 @@ int nm_init_spoof_opt(char *arg)
 
   return (0);
 }
+
+int							nm_init_pt_opt(char *arg)
+{
+	int pt;
+
+	if (!ft_is_number(arg))
+		return (-1);
+	pt = ft_atoi(arg);
+	if (pt < 1 || pt > 10)
+		return (-1);
+	else
+		g_struct.packet_time = pt * 1000;
+	return (0);
+}
+
 int nm_init_ttl_opt(char *arg)
 {
-  ft_putstr("nm_init_ttl_opt\n");
-  printf("argtype: %s\n", arg);
   int ttl;
 
   if (!ft_is_number(arg))
