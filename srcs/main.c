@@ -43,7 +43,10 @@ void 							nm_display()
 	t_store *ptr = NULL;
 	int port = 0;
 	int check_p = 0;
+	int check_v = 0;
 
+	printf("%-15s %-20s %-10s %-55s %-10s\n","Ip", "Service Name", "Port", "Results", "Conclusion");
+	printf("--------------------------------------------------------------------------------------------------------------------\n");
 	while (port < 1025)
 	{
 		ptr = g_struct.store;
@@ -52,12 +55,16 @@ void 							nm_display()
 			if (port == ptr->ports_results->port)
 			{
 				if (check_p == 0)
-					printf("ip: %s, port: %d, type: ", ptr->ip, ptr->ports_results->port);
+					printf("%-15s %-20s %-10d ", ptr->ip, "Unassigned", ptr->ports_results->port);
 				nm_display_scan_type(ptr->ports_results->type, ptr->ports_results->results);
+				if (check_v == 2)
+					printf("\n%-48s", "");
+				check_v++;
 				check_p = 1;
 			}
 			ptr = ptr->next;
 		}
+		check_v = 0;
 		if (check_p == 1)
 			printf("\n");
 		check_p = 0;
