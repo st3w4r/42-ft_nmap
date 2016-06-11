@@ -219,7 +219,7 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, t_th_sniffer data_sn
 		ptr->ports_results->results = data_sniffer.scan_result;
 		ptr->ports_results->type = data_sniffer.scan_type;
 		ptr->ports_results->conclusion = TRUE;
-		ptr->ports_results->service_name = ft_strdup("Roger");
+		ptr->ports_results->service_name = nm_get_service_name(data_sniffer.port_dst, (ip->ip_p == IPPROTO_TCP ? "tcp" : "udp"));
 
 		ptr->next = (t_store*)malloc(sizeof(t_store));
 		ptr = ptr->next;
