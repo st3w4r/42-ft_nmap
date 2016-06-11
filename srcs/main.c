@@ -44,6 +44,7 @@ void 							nm_display()
 	int port = 0;
 	int check_p = 0;
 	int check_v = 0;
+	int open = 0;
 
 	printf("%-15s %-20s %-10s %-55s %-10s\n","Ip", "Service Name", "Port", "Results", "Conclusion");
 	printf("--------------------------------------------------------------------------------------------------------------------\n");
@@ -57,6 +58,8 @@ void 							nm_display()
 				if (check_p == 0)
 					printf("%-15s %-20s %-10d ", ptr->ip, "Unassigned", ptr->ports_results->port);
 				nm_display_scan_type(ptr->ports_results->type, ptr->ports_results->results);
+				if (ptr->ports_results->results & F_RESULT_OPEN)
+					open = 1;
 				if (check_v == 2)
 					printf("\n%-48s", "");
 				check_v++;
@@ -64,9 +67,14 @@ void 							nm_display()
 			}
 			ptr = ptr->next;
 		}
-		check_v = 0;
 		if (check_p == 1)
-			printf("\n");
+				printf("\n");
+		if (open == 1 && check_p == 1)
+			printf("%*s",110, "Open\n");
+		else if (open == 0 && check_p == 1)
+			printf("%*s\n",110, "Close\n");
+		open = 0;
+		check_v = 0;
 		check_p = 0;
 		port++;
 	}
