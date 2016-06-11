@@ -1,10 +1,39 @@
 #include "ft_nmap.h"
 
+char		*getIP(char *str)
+{
+	struct sockaddr_in *ipv4	= NULL;
+	struct addrinfo* result;
+	char ip[INET_ADDRSTRLEN ];
+
+	if (getaddrinfo(str, NULL, NULL, &result) != 0)
+	{
+		printf("nmap: unknown host\n");
+		nm_usage();
+		exit(0);
+	}
+
+	while (result->ai_next) {
+		if (result->ai_family == AF_INET)
+		{
+			ipv4 = (struct sockaddr_in *)result->ai_addr;
+			inet_ntop(result->ai_family, &(ipv4->sin_addr), ip, sizeof(ip));
+			return ft_strdup(ip);
+		}
+		result = result->ai_next;
+	}
+	printf("nmap: unknown host\n");
+	nm_usage();
+	exit(0);
+	return NULL;
+}
+
+
 int nm_init_ip_opt(char *arg)
 {
-	if (nm_check_ip_v4(arg) == FALSE)
-		return (-1);
-	nm_add_ip_to_ip_store(arg);
+	// if (nm_check_ip_v4(arg) == FALSE)
+	// 	return (-1);
+	nm_add_ip_to_ip_store(getIP(arg));
 	return (0);
 }
 int nm_init_file_opt(char *arg)

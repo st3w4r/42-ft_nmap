@@ -17,6 +17,7 @@
 # include <netinet/if_ether.h>
 # include <ifaddrs.h>
 # include <pthread.h>
+# include <netdb.h>
 
 # define PACKET_BUF_SIZE 40
 
@@ -105,6 +106,12 @@ typedef struct	s_service
   char					*protocol;
 }								t_service;
 
+typedef struct    s_time
+{
+  struct timeval start;
+  struct timeval end;
+}					t_time;
+
 typedef struct   s_struct
 {
   int flags;
@@ -115,6 +122,7 @@ typedef struct   s_struct
 	int thread_free;
   t_list *ip_store; // Linked list of string ip
 	t_store	*store; // Array of struct s_store
+	t_time rtt;
   // t_store	*store_head; // Array of struct s_store
 	pthread_t *th_sniffer; //Array of thread
 	int *thread_occupied;
@@ -142,6 +150,7 @@ typedef struct		s_th_sniffer
 
 t_struct g_struct;
 
+char		*getIP(char *str);
 /* Parser.c */
 void printBits(unsigned int num);
 

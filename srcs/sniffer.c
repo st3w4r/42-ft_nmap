@@ -124,7 +124,7 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 	// printf("TCP SEQ: %u ", ntohl(tcp->seq));
 	// printf("TCP ACK: %u ", ntohl(tcp->ack_seq));
 	// printf("FLAGS:\n");
-	//
+
 	// (tcp->fin & 0x1) ? printf("FIN on\n") : printf("FIN off\n");
 	// (tcp->syn & 0x1) ? printf("SYN on\n") : printf("SYN off\n");
 	// (tcp->rst & 0x1) ? printf("RST on\n") : printf("RST off\n");
@@ -136,14 +136,6 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 	data_sniffer->scan_result = nm_detect_scan(data_sniffer->scan_type, FALSE,
 			tcp->urg, tcp->ack, tcp->psh, tcp->rst, tcp->syn, tcp->fin);
 
-/*
-	(tcp->fin & 0x1) ? printf("FIN on\n") : printf("FIN off\n");
-	(tcp->syn & 0x1) ? printf("SYN on\n") : printf("SYN off\n");
-	(tcp->rst & 0x1) ? printf("RST on\n") : printf("RST off\n");
-	(tcp->psh & 0x1) ? printf("PUSH on\n") : printf("PUSH off\n");
-	(tcp->ack & 0x1) ? printf("ACK on\n") : printf("ACK off\n");
-	(tcp->urg & 0x1) ? printf("URG on\n") : printf("URG off\n");
-*/
 }
 
 
@@ -165,16 +157,8 @@ void	 *nm_th_sniffer(void * data)
 	else
 		tcp = nm_configure_packet_tcp(buf, data_sniffer.port_src, data_sniffer.port_dst
 			, data_sniffer.seq, data_sniffer.ack_seq, data_sniffer.flags);
-
-
-
-	// printf("Dans thread data_sniffer: %s flag: %d\n", data_sniffer.filter_exp, data_sniffer.flags);
 	nm_sniffer(data_sniffer.filter_exp, buf, ip, data_sniffer);
-	// printf("Sortie de thread\n");
-	// usleep((rand() % 4000000));
-	// printf("Bonjour\n");
-	// int ret = 1;
-	// pthread_exit(NULL);
+
 	return (1);
 }
 
@@ -196,7 +180,7 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, t_th_sniffer data_sn
 		net = 0;
 		mask = 0;
 	}
-	handle = pcap_open_live(dev, BUFSIZ, 1, 1000, errbuf);
+	handle = pcap_open_live(dev, BUFSIZ, 1, 500, errbuf);
 	if (handle == NULL)
 	{
 		fprintf(stderr, "Couldn't open device: %s:%s\n", dev, errbuf);
@@ -220,22 +204,7 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, t_th_sniffer data_sn
 	int ret = pcap_dispatch(handle, 1, nm_capture_packet, (unsigned char *)&data_sniffer);
 	if (ret == 0)
 		data_sniffer.scan_result = nm_detect_scan(data_sniffer.scan_type, TRUE, 0, 0, 0, 0, 0, 0);
-	// typedef struct	s_port_result
-	// {
-	// 	int			port;
-	// 	int			type; // e_scan_types
-	// 	int			results;
-	// 	t_bool	conclusion;
-	// 	char		*service_name;
-	//
-	// }				t_port_result;
-	//
-	// typedef struct	s_store
-	// {
-	// 	char					*ip;
-	// 	t_port_result	*ports_results;
-	// 	struct s_stone *next;
-	// }
+
 	pthread_mutex_lock(&g_struct.store_mutex);
 
 		t_store *ptr = NULL;
