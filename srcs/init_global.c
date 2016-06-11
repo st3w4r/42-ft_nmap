@@ -36,6 +36,7 @@ void nm_g_struct_init()
 	g_struct.store = (t_store*)malloc(sizeof(t_store));
 	g_struct.store->next = NULL;
 	nm_init_speedup_opt("1");
+	nm_init_ports_opt("0-1024");
 	nm_g_struct_init_fun();
 
 }

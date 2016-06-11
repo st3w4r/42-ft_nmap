@@ -132,12 +132,17 @@ void nm_ports_loop(char *ip_str, int s, struct sockaddr_in sin)
 	int port;
 
 	port = 0;
-	while (port < 1024)
+	write(1, "Scanning ", ft_strlen("Scanning "));
+	while (port < 1025)
 	{
 		if (g_struct.ports[port] == 1)
+		{
+			write(1, ".", 1);
 			nm_scans_loop(port, ip_str, s, sin);
+		}
 		port++;
 	}
+	write(1, "\n", 1);
 }
 
 t_th_sniffer *nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str, struct sockaddr_in sin, enum e_scan_types type)

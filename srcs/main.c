@@ -19,9 +19,10 @@ char *nm_display_scan_result(int result)
 		return("unfiltered");
 	else if (result & F_RESULT_OPEN_FILTERED)
 		return("open|filtered");
+	return("unreachable");
 }
 
-char *nm_display_scan_type(int type, int result)
+void nm_display_scan_type(int type, int result)
 {
 // printf("%-20s", "initialization...");
 	if (type & SYN_F)
@@ -70,7 +71,7 @@ void 							nm_display()
 		if (check_p == 1)
 				printf("\n");
 		if (open == 1 && check_p == 1)
-			printf("%*s",110, "Open\n");
+			printf("%*s\n",110, "Open\n");
 		else if (open == 0 && check_p == 1)
 			printf("%*s\n",110, "Close\n");
 		open = 0;
@@ -78,7 +79,39 @@ void 							nm_display()
 		check_p = 0;
 		port++;
 	}
+}
 
+void nm_display_header()
+{
+// 	Scan Configurations
+// Target Ip-Address : x.x.x.x
+// No of Ports to scan : 10
+// Scans to be performed : SYN NULL FIN XMAS ACK UDP
+// No of threads : 200
+// Scanning..
+// ................
+// Scan took 16.21338 sec
+
+	int i;
+
+	i = 0;
+	while (g_struct.ip_store[i].content)
+		i++;
+
+	printf("Scan Configurations\n");
+	if (i == 1)
+		printf("Target Ip-Address: %s\n", g_struct.ip_store[0].content);
+	else
+		printf("Target Ip-Address: multiple\n");
+	printf("No of Ports to scan: ");
+	i = 0;
+	while (i < 1025)
+	{
+		if (g_struct.ports[i] == 1)
+			printf("%d ", i);
+		i++;
+	}
+	printf("\nNo of threads: %d\n", g_struct.speedup);
 
 }
 int               main(int argc, char **argv)
@@ -90,6 +123,7 @@ int               main(int argc, char **argv)
 	nm_g_struct_init();
 	nm_argv_parser(argv, argc);
 
+	nm_display_header();
 	pthread_mutex_init(&g_struct.pcap_init_mutex, NULL);
 	pthread_mutex_init(&g_struct.store_mutex, NULL);
 

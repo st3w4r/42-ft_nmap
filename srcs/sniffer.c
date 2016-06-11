@@ -17,67 +17,67 @@ enum e_scan_result	nm_detect_scan(
 	// SYN
 	if ((scan_type & SYN_F) && (syn & 0x1 ) && (ack & 0x1))
 	{
-		printf("--OPEN-- SCAN SYN\n");
+		// printf("--OPEN-- SCAN SYN\n");
 		result = F_RESULT_OPEN;
 	}
 	else if ((scan_type & SYN_F) && (rst & 0x1))
 	{
-		printf("--CLOSE-- SCAN SYN\n");
+		// printf("--CLOSE-- SCAN SYN\n");
 		result = F_RESULT_CLOSE;
 	}
 	else if ((scan_type & SYN_F) && (timeout == TRUE))
 	{
-		printf("--FILTERED-- SCAN SYN\n");
+		// printf("--FILTERED-- SCAN SYN\n");
 		result = F_RESULT_FILTERED;
 	}
 	// NULL
 	else if ((scan_type & NULL_F) && (rst & 0x1))
 	{
-		printf("--CLOSE-- SCAN NULL\n");
+		// printf("--CLOSE-- SCAN NULL\n");
 		result = F_RESULT_CLOSE;
 	}
 	else if ((scan_type & NULL_F) && (timeout == TRUE))
 	{
-		printf("--OPEN FILTERED-- SCAN NULL\n");
+		// printf("--OPEN FILTERED-- SCAN NULL\n");
 		result = F_RESULT_OPEN_FILTERED;
 	}
 	// FIN
 	else if ((scan_type & FIN_F) && (rst & 0x1))
 	{
-		printf("--CLOSE-- SCAN FIN\n");
+		// printf("--CLOSE-- SCAN FIN\n");
 		result = F_RESULT_CLOSE;
 	}
 	else if ((scan_type & FIN_F) && (timeout == TRUE))
 	{
-		printf("--OPEN FILTERED-- SCAN FIN\n");
+		// printf("--OPEN FILTERED-- SCAN FIN\n");
 		result = F_RESULT_OPEN_FILTERED;
 	}
 	// XMAS
 	else if ((scan_type & XMAS_F) && (rst & 0x1))
 	{
-		printf("--CLOSE-- SCAN XMAS\n");
+		// printf("--CLOSE-- SCAN XMAS\n");
 		result = F_RESULT_CLOSE;
 	}
 	else if ((scan_type & XMAS_F) && (timeout == TRUE))
 	{
-		printf("--OPEN FILTERED-- SCAN XMAS\n");
+		// printf("--OPEN FILTERED-- SCAN XMAS\n");
 		result = F_RESULT_OPEN_FILTERED;
 	}
 	// UDP
 	else if ((scan_type & UDP_F) && (timeout == TRUE))
 	{
-		printf("--OPEN FILTERED-- SCAN UDP\n");
+		// printf("--OPEN FILTERED-- SCAN UDP\n");
 		result = F_RESULT_OPEN_FILTERED;
 	}
 	// ACK
 	else if ((scan_type & ACK_F) && (rst & 0x1))
 	{
-		printf("--UNFILTERED-- SCAN ACK\n");
+		// printf("--UNFILTERED-- SCAN ACK\n");
 		result = F_RESULT_UNFILTERED;
 	}
 	else if ((scan_type & ACK_F) && (timeout == TRUE))
 	{
-		printf("--FILTERED-- SCAN ACK\n");
+		// printf("--FILTERED-- SCAN ACK\n");
 		result = F_RESULT_FILTERED;
 	}
 	// else if (timeout == TRUE)
