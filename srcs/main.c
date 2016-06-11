@@ -68,9 +68,9 @@ void 							nm_display()
 		if (check_p == 1)
 				printf("\n");
 		if (open == 1 && check_p == 1)
-			printf("%*s\n",110, "Open\n");
+			printf("%*s\n",110, "Open");
 		else if (open == 0 && check_p == 1)
-			printf("%*s\n",110, "Close\n");
+			printf("%*s\n",110, "Close");
 		open = 0;
 		check_v = 0;
 		check_p = 0;
