@@ -72,7 +72,7 @@ void nm_ip_loop(int s, struct sockaddr_in sin)
 	double ttime_sec = 0.0;
 	ttime_msec = timedifference_msec(g_struct.rtt.start, g_struct.rtt.end);
 	ttime_sec = timedifference_sec(g_struct.rtt.start, g_struct.rtt.end);
-	printf("Scan took: %.0f.%.0fsec\n", ttime_sec,ttime_msec);
+	printf("Scan took: %.0f.%.0f secs\n", ttime_sec,ttime_msec);
 	free_threads();
 }
 

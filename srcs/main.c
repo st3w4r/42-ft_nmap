@@ -91,15 +91,16 @@ void nm_display_header()
 		printf("Target Ip-Address: %s\n", g_struct.ip_store[0].content);
 	else
 		printf("Target Ip-Address: multiple\n");
-	printf("No of Ports to scan: ");
 	i = 0;
+	int j = 0;
 	while (i < 1025)
 	{
 		if (g_struct.ports[i] == 1)
-			printf("%d ", i);
+			j++;
 		i++;
 	}
-	printf("\nNo of threads: %d\n", g_struct.speedup);
+	printf("No of Ports to scan: %d\n", j);
+	printf("No of threads: %d\n", g_struct.speedup);
 }
 
 int               main(int argc, char **argv)
