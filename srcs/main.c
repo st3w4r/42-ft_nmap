@@ -88,9 +88,9 @@ void nm_display_header()
 
 	printf("Scan Configurations\n");
 	if (i == 1)
-		printf("Target Ip-Address: %s\n", g_struct.ip_store[0].content);
+		printf("Target Ip-Address : %s\n", g_struct.ip_store[0].content);
 	else
-		printf("Target Ip-Address: multiple\n");
+		printf("Target Ip-Address : multiple\n");
 	i = 0;
 	int j = 0;
 	while (i < 1025)
@@ -99,8 +99,22 @@ void nm_display_header()
 			j++;
 		i++;
 	}
-	printf("No of Ports to scan: %d\n", j);
-	printf("No of threads: %d\n", g_struct.speedup);
+	printf("No of Ports to scan : %d\n", j);
+	printf("Scans to be performed : ");
+	if (g_struct.types & SYN_F)
+		printf("SYN ");
+	if (g_struct.types & ACK_F)
+		printf("ACK ");
+	if (g_struct.types & FIN_F)
+		printf("FIN ");
+	if (g_struct.types & XMAS_F)
+		printf("XMAS ");
+	if (g_struct.types & UDP_F)
+		printf("UDP ");
+	if (g_struct.types & NULL_F)
+		printf("NULL ");
+	printf("\n");
+	printf("No of threads : %d\n", g_struct.speedup);
 }
 
 int               main(int argc, char **argv)
