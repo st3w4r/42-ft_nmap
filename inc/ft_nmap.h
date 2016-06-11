@@ -82,11 +82,14 @@ typedef struct	s_scan_result
 
 typedef struct	s_port_result
 {
-	int						port;
-	t_scan_result	*t_scan_result; // Array of t_scan_result
-	t_bool				conclusion;
-	char					*service_name;
+	int			port;
+	int			type; // e_scan_types
+	int			results;
+	t_bool	conclusion;
+	char		*service_name;
+
 }				t_port_result;
+
 
 typedef struct	s_store
 {
