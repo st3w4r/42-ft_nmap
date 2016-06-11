@@ -120,12 +120,11 @@ int               main(int argc, char **argv)
 		ft_error_str_exit("ft_nmap: Operation not permitted\n");
 	(void)argc;
 
-	nm_g_struct_init();
-	nm_argv_parser(argv, argc);
-
-	nm_display_header();
 	pthread_mutex_init(&g_struct.pcap_init_mutex, NULL);
 	pthread_mutex_init(&g_struct.store_mutex, NULL);
+	nm_g_struct_init();
+	nm_argv_parser(argv, argc);
+	nm_display_header();
 
 	nm_loop();
 	nm_display();
