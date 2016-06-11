@@ -88,6 +88,7 @@ typedef struct	s_store
 {
 	char					*ip;
 	t_port_result	*ports_results;
+	struct s_store *next;
 }								t_store;
 
 typedef struct	s_service
@@ -106,10 +107,12 @@ typedef struct   s_struct
 	int *ports;
 	int thread_free;
   t_list *ip_store; // Linked list of string ip
-  t_store	*sotre; // Array of struct s_store
+	t_store	*store; // Array of struct s_store
+  // t_store	*store_head; // Array of struct s_store
 	pthread_t *th_sniffer; //Array of thread
 	int *thread_occupied;
 	pthread_mutex_t pcap_init_mutex;
+	pthread_mutex_t store_mutex;
 	int (*ptr_init_fun[11]) ();
 }                t_struct;
 
