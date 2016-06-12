@@ -121,6 +121,7 @@ typedef struct   s_struct
   int packet_time;
 	int *ports;
 	int thread_free;
+	int source_port;
   t_list *ip_store; // Linked list of string ip
 	t_store	*store; // Array of struct s_store
 	t_time rtt;

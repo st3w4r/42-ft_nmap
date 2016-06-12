@@ -11,6 +11,7 @@ int             nm_argv_parser(char **argv, int argc)
   opt           = 0;
   i             = 1;
   tabargs       = nm_get_args();
+
   while (i < argc)
   {
     argtype = nm_arg_type(argv[i]);
@@ -106,7 +107,7 @@ char**          nm_get_args()
 	tabargs[8]		= ft_strdup("--pt");
   tabargs[9]    = ft_strdup("-O");
   tabargs[10]		= ft_strdup("-S");
-	tabargs[11]   = ft_strdup("-g");
+	tabargs[11]   = ft_strdup("--g");
   tabargs[12]   = NULL;
 
   return (tabargs);
@@ -121,7 +122,8 @@ int            nm_usage()
   printf("--file File name containing IP addresses to scan,\n");
 	printf("--speedup [250 max] number of parallel threads to use\n");
 	printf("--ttl (time to live) 1-255\n");
-  printf("--pt (packet time) 1-10 sec\n");
+	printf("--pt (packet time) 1-10 sec\n");
+  printf("--g (source port) 1-65536 \n");
   printf("--scan SYN/NULL/FIN/XMAS/ACK/UDP\n");
   return (-1);
 }

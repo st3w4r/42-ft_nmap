@@ -35,6 +35,7 @@ void nm_g_struct_init()
 	g_struct.th_sniffer = NULL;
 	g_struct.thread_free = 0;
   g_struct.types = 0x003F;
+	g_struct.source_port = 4242;
 	g_struct.store = (t_store*)malloc(sizeof(t_store));
 	g_struct.store->next = NULL;
 	// g_struct.rtt->start;

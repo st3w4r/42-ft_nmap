@@ -108,8 +108,14 @@ int nm_init_s_opt(char *arg)
 }
 int nm_init_g_opt(char *arg)
 {
-  ft_putstr("nm_init_g_opt\n");
-  printf("argtype: %s\n", arg);
+	int port;
 
+  if (!ft_is_number(arg))
+    return (-1);
+  port = ft_atoi(arg);
+  if (port < 1 || port > 65536)
+    return (-1);
+  else
+    g_struct.source_port = port;
   return (0);
 }

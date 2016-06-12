@@ -94,6 +94,8 @@ void nm_display_header()
 	i = 0;
 	int j = 0;
 	printf("Ttl : %d\n", g_struct.ttl );
+	printf("Packet Time : %d secs\n", g_struct.packet_time / 1000 );
+	printf("Source port : %d\n", g_struct.source_port );
 	while (i < 1025)
 	{
 		if (g_struct.ports[i] == 1)
