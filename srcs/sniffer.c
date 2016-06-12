@@ -210,20 +210,94 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, t_th_sniffer data_sn
 		t_store *ptr = NULL;
 		ptr = g_struct.store;
 
-		while(ptr->next != NULL)
+		// Store in Same IP
+		while (ptr != NULL && ptr->ip && ft_strcmp(ptr->ip, data_sniffer.ip_str) != 0)
+		{
 			ptr = ptr->next;
-		ptr->ports_results = (t_port_result*)malloc(sizeof(t_port_result));
+		}
+		// Init Store
+		if (ptr == NULL){
+			// printf("IN\n");
+			ptr = (t_store*)malloc(sizeof(t_store));
+			if (g_struct.store == NULL)
+			{
+				// printf("--------FIRST-------\n" );
+				g_struct.store = ptr;
+			}
+			ptr->next = NULL;
+			ptr->ip = ft_strdup(data_sniffer.ip_str);
+			// printf("IP PTR: %s\n", ptr->ip);
 
-		ptr->ip = ft_strdup(data_sniffer.ip_str);
-		ptr->ports_results->port = data_sniffer.port_dst;
-		ptr->ports_results->results = data_sniffer.scan_result;
-		ptr->ports_results->type = data_sniffer.scan_type;
-		ptr->ports_results->conclusion = TRUE;
-		ptr->ports_results->service_name = nm_get_service_name(data_sniffer.port_dst, (ip->ip_p == IPPROTO_TCP ? "tcp" : "udp"));
+			ptr->ports_results = NULL;
+		}
+		// Get Same Port
+		while (ptr->ports_results != NULL && (ptr->ports_results->port != data_sniffer.port_dst))
+			ptr->ports_results = ptr->ports_results->next;
+		// Init Ports Results
+		if (ptr->ports_results == NULL)
+		{
+			ptr->ports_results = (t_port_result*)malloc(sizeof(t_port_result));
+			ptr->ports_results->next = NULL;
+			ptr->ports_results->port = data_sniffer.port_dst;
+			ptr->ports_results->conclusion = TRUE;
+			ptr->ports_results->service_name = nm_get_service_name(data_sniffer.port_dst, (ip->ip_p == IPPROTO_TCP ? "tcp" : "udp"));
+			ptr->ports_results->scan_result = NULL;
+		}
+		// Get Last Scan Result
+		while (ptr->ports_results->scan_result != NULL)
+			ptr->ports_results->scan_result = ptr->ports_results->scan_result->next;
+		// Init Scan Result
+		if (ptr->ports_results->scan_result == NULL)
+		{
+			ptr->ports_results->scan_result = (t_scan_result*)malloc(sizeof(t_scan_result));
+			ptr->ports_results->scan_result->next = NULL;
+			ptr->ports_results->scan_result->result = data_sniffer.scan_result;
+			ptr->ports_results->scan_result->type = data_sniffer.scan_type;
+		}
 
-		ptr->next = (t_store*)malloc(sizeof(t_store));
-		ptr = ptr->next;
-		ptr->next = NULL;
+
+		// if (ptr == NULL){
+		// 	ptr->ip = ft_strdup(data_sniffer.ip_str);
+		// }
+			// ptr->ports_results = (t_port_result*)malloc(sizeof(t_port_result));
+			// ptr->ports_results->next = NULL;
+			// ptr->ports_results->scan_result = (t_scan_result*)malloc(sizeof(t_scan_result));
+			// ptr->ports_results->scan_result->next = NULL;
+		// }
+		//
+		// // Store in Same Port
+		// while (ptr && ptr->ports_results && (ptr->ports_results->port != data_sniffer.port_dst))
+		// {
+		// 	ptr->ports_results->port = data_sniffer.port_dst;
+		// 	ptr->ports_results = ptr->ports_results->next;
+		// 	ptr->next = (t_scan_result*)malloc(sizeof(t_scan_result));
+		// 	ptr->ports_results->scan_result->next = NULL;
+		// }
+		// if (ptr->ports_results->next && (ptr->ports_results->next == NULL))
+		// {
+		// 	ptr->ports_results = (t_port_result*)malloc(sizeof(t_port_result));
+		// 	ptr->ports_results->port = data_sniffer.port_dst;
+		// 	// ptr->ports_results->next = NULL;
+		// }
+		// while(ptr->next != NULL)
+		// 	ptr = ptr->next;
+		// ptr->ports_results = (t_port_result*)malloc(sizeof(t_port_result));
+
+		// ptr->ip = ft_strdup(data_sniffer.ip_str);
+		// ptr->ports_results->port = data_sniffer.port_dst;
+		// while (ptr->ports_results->scan_result->next != NULL)
+		// 	ptr->ports_results->scan_result = ptr->ports_results->scan_result->next;
+
+		// ptr->ports_results->scan_result->result = data_sniffer.scan_result;
+		// ptr->ports_results->scan_result->type = data_sniffer.scan_type;
+
+
+		// ptr->ports_results->conclusion = TRUE;
+		// ptr->ports_results->service_name = nm_get_service_name(data_sniffer.port_dst, (ip->ip_p == IPPROTO_TCP ? "tcp" : "udp"));
+
+		// ptr->next = (t_store*)malloc(sizeof(t_store));
+		// ptr = ptr->next;
+		// ptr->next = NULL;
 	pthread_mutex_unlock(&g_struct.store_mutex);
 
 

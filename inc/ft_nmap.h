@@ -20,6 +20,7 @@
 # include <netdb.h>
 
 # define PACKET_BUF_SIZE 40
+# define NB_SCAN_TYPE 6
 
 enum		e_scan_result
 {
@@ -79,16 +80,18 @@ typedef struct	s_scan_result
 {
 	enum e_scan_types		type;
 	enum e_scan_result	result;
+	struct s_scan_result *next;
 }								t_scan_result;
 
 typedef struct	s_port_result
 {
 	int			port;
-	int			type; // e_scan_types
-	int			results;
+	t_scan_result *scan_result; // Linked list of Scan_result
+	// int			type; // e_scan_types
+	// int			results;
 	t_bool	conclusion;
 	char		*service_name;
-
+	struct s_port_result *next;
 }				t_port_result;
 
 
