@@ -47,7 +47,7 @@ void 							nm_display()
 	printf("%-15s %-20s %-10s %-55s %-10s\n","Ip", "Service Name", "Port", "Results", "Conclusion");
 	printf("--------------------------------------------------------------------------------------------------------------------\n");
 	ptr = g_struct.store;
-	while (ptr != NULL)
+	while (ptr->next != NULL)
 	{
 		port = 0;
 		while (port < 1025)
