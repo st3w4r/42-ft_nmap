@@ -331,6 +331,5 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, t_th_sniffer data_sn
 		ptr->ports_results->scan_result->next = NULL;
 	pthread_mutex_unlock(&g_struct.store_mutex);
 
-
 	pcap_close(handle);
 }

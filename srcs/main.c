@@ -47,15 +47,21 @@ void 							nm_display()
 	printf("%-15s %-20s %-10s %-55s %-10s\n","Ip", "Service Name", "Port", "Results", "Conclusion");
 	printf("--------------------------------------------------------------------------------------------------------------------\n");
 	ptr = g_struct.store;
+	// printf("%s\n", ptr->ip);
 	while (ptr->next != NULL)
 	{
-		port = 0;
-		while (port < 1025)
-		{
-			if (port == ptr->ports_results->port)
-			{
-				if (check_p == 0)
+		// port = 0;
+		// while (port < 1025)
+		// {
+		// 	if (port == ptr->ports_results->port)
+		// 	{
+				// if (check_p == 0)
+				while (ptr->ports_results)
+				{
 					printf("%-15s %-20s %-10d ", ptr->ip, ptr->ports_results->service_name, ptr->ports_results->port);
+					nm_display_scan_type(ptr->ports_results->scan_result->type, ptr->ports_results->scan_result->result);
+					ptr->ports_results = ptr->ports_results->next;
+				}
 
 					//
 					// int i = 0;
@@ -74,9 +80,9 @@ void 							nm_display()
 				// 	printf("\n%-48s", "");
 				// check_v++;
 				// check_p = 1;
-			}
-			port++;
-		}
+
+			// port++;
+		// }
 		ptr = ptr->next;
 		if (check_p == 1)
 				printf("\n");
