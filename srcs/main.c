@@ -39,23 +39,23 @@ void nm_display_scan_type(int type, int result)
 void 							nm_display()
 {
 	t_store *ptr = NULL;
-	int port = 0;
+	int port;
 	int check_p = 0;
 	int check_v = 0;
 	int open = 0;
 
 	printf("%-15s %-20s %-10s %-55s %-10s\n","Ip", "Service Name", "Port", "Results", "Conclusion");
 	printf("--------------------------------------------------------------------------------------------------------------------\n");
-	while (port < 1025)
+	ptr = g_struct.store;
+	while (ptr->next != NULL)
 	{
-		ptr = g_struct.store;
-		while (ptr->next != NULL)
+		port = 0;
+		while (port < 1025)
 		{
 			if (port == ptr->ports_results->port)
 			{
 				if (check_p == 0)
 					printf("%-15s %-20s %-10d ", ptr->ip, ptr->ports_results->service_name, ptr->ports_results->port);
-				nm_display_scan_type(ptr->ports_results->type, ptr->ports_results->results);
 				if (ptr->ports_results->results & F_RESULT_OPEN)
 					open = 1;
 				if (check_v == 2)
@@ -63,8 +63,9 @@ void 							nm_display()
 				check_v++;
 				check_p = 1;
 			}
-			ptr = ptr->next;
+			port++;
 		}
+		ptr = ptr->next;
 		if (check_p == 1)
 				printf("\n");
 		if (open == 1 && check_p == 1)
@@ -74,25 +75,19 @@ void 							nm_display()
 		open = 0;
 		check_v = 0;
 		check_p = 0;
-		port++;
 	}
 }
 
 void nm_display_header()
 {
-	int i;
-
-	i = 0;
-	while (g_struct.ip_store[i].content)
-		i++;
+	int i = 0;
+	int j = 0;
 
 	printf("\n\nScan Configurations\n-------------------------------\n");
-	if (i == 1)
-		printf("Target Ip-Address : %s\n", g_struct.ip_store[0].content);
+	if (g_struct.ip_store->next == NULL)
+		printf("Target Ip-Address : %s\n", g_struct.ip_store->content);
 	else
 		printf("Target Ip-Address : multiple\n");
-	i = 0;
-	int j = 0;
 	printf("Ttl : %d\n", g_struct.ttl );
 	printf("Packet Time : %d secs\n", g_struct.packet_time / 1000 );
 	printf("Source port : %d\n", g_struct.source_port );

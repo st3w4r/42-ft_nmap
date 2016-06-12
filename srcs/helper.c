@@ -76,13 +76,16 @@ void	nm_add_ip_to_ip_store(char *ip)
 {
 	t_list	*ip_entry;
 
-	if ((ip_entry = malloc(sizeof(t_list))) < 0)
-		ft_malloc_error();
-	ip_entry->content = ft_strdup(ip);
-	if (g_struct.ip_store)
-		ft_lstadd(&g_struct.ip_store, ip_entry);
-	else
-		g_struct.ip_store = ft_lstnew(ip, ft_strlen(ip) + 1);
+	// if ((ip_entry = malloc(sizeof(t_list))) < 0)
+		// ft_malloc_error();
+	// ip_entry->content = ft_strdup(ip);
+	ip_entry = ft_lstnew(ip, ft_strlen(ip));
+	// if (g_struct.ip_store)
+	// {
+			ft_lstadd(&g_struct.ip_store, ip_entry);
+	// }
+	// else
+	// 	g_struct.ip_store = ip_entry;//ft_lstnew(ip, ft_strlen(ip) + 1);
 
 }
 
@@ -97,6 +100,13 @@ void	nm_get_ip_file(char *file)
 		if (nm_check_ip_v4(line))
 			nm_add_ip_to_ip_store(line);
 	close(fd);
+
+	// while (g_struct.ip_store != NULL)
+	// {
+	// 	printf("IP: %s\n", g_struct.ip_store->content);
+	// 	g_struct.ip_store = g_struct.ip_store->next;
+	// }
+	// exit(1);
 }
 
 t_bool	nm_check_ip_v4(char *ip)

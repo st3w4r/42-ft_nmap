@@ -62,10 +62,10 @@ void nm_ip_loop(int s, struct sockaddr_in sin)
 
 	i = 0;
 	gettimeofday(&g_struct.rtt.start, NULL);
-	while (g_struct.ip_store[i].content)
+	while (g_struct.ip_store != NULL)
 	{
-		nm_ports_loop(g_struct.ip_store[i].content, s, sin);
-		i++;
+		nm_ports_loop(g_struct.ip_store->content, s, sin);
+		g_struct.ip_store = g_struct.ip_store->next;
 	}
 	gettimeofday(&g_struct.rtt.end, NULL);
 	double ttime_msec = 0.0;
