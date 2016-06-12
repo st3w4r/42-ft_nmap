@@ -48,46 +48,29 @@ void 							nm_display()
 	printf("--------------------------------------------------------------------------------------------------------------------\n");
 	ptr = g_struct.store;
 	while (ptr->next != NULL)
-	{
-		port = 0;
-		while (port < 1025)
-		{
-			if (port == ptr->ports_results->port)
-			{
-				if (check_p == 0)
-					printf("%-15s %-20s %-10d ", ptr->ip, ptr->ports_results->service_name, ptr->ports_results->port);
-
-					//
-					// int i = 0;
-					// while (i < 7)
-					// {
-					// 	if (g_struct.types & (1 << i))
-					// 	{
-							// nm_display_scan_type(ptr->ports_results->type, ptr->ports_results->results);
-					// 	}
-					// 	i++;
-					// }
-
-				// if (ptr->ports_results->results & F_RESULT_OPEN)
-				// 	open = 1;
-				// if (check_v == 2)
-				// 	printf("\n%-48s", "");
-				// check_v++;
-				// check_p = 1;
-			}
-			port++;
-		}
-		ptr = ptr->next;
-		if (check_p == 1)
-				printf("\n");
-		if (open == 1 && check_p == 1)
-			printf("%*s\n",110, "Open");
-		else if (open == 0 && check_p == 1)
-			printf("%*s\n",110, "Close");
-		open = 0;
-		check_v = 0;
-		check_p = 0;
-	}
+    {
+                while (ptr->ports_results)
+                {
+                    printf("%-15s %-20s %-10d ", ptr->ip, ptr->ports_results->service_name, ptr->ports_results->port);
+                    while (ptr->ports_results->scan_result)
+                    {
+                        nm_display_scan_type(ptr->ports_results->scan_result->type, ptr->ports_results->scan_result->result);
+                        ptr->ports_results->scan_result = ptr->ports_results->scan_result->next;
+                    }
+                    ptr->ports_results = ptr->ports_results->next;
+                }
+            ptr = ptr->next;
+    }
+		// ptr = ptr->next;
+		// if (check_p == 1)
+		// 		printf("\n");
+		// if (open == 1 && check_p == 1)
+		// 	printf("%*s\n",110, "Open");
+		// else if (open == 0 && check_p == 1)
+		// 	printf("%*s\n",110, "Close");
+		// open = 0;
+		// check_v = 0;
+		// check_p = 0;
 }
 
 void nm_display_header()

@@ -302,35 +302,30 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, t_th_sniffer data_sn
 		t_store *ptr = NULL;
 		ptr = g_struct.store;
 
-		int i = 0;
+		t_bool ip_find = FALSE;
+		t_bool port_find = FALSE;
 
 		while(ptr->next != NULL)
+		{
+			printf("ip: %s, port: %d, result: %d, service_name: %s\n", ptr->ip, ptr->ports_results->port, ptr->ports_results->scan_result->result, ptr->ports_results->service_name);
+			// if (ft_strcmp(ptr->ip, data_sniffer.ip_str) == 0)
+			// {
+			// 	ip_find = TRUE;
+			// 	break;
+			// }
 			ptr = ptr->next;
-
-		ptr->next = (t_store*)malloc(sizeof(t_store));
-		ptr = ptr->next;
-		ptr->ports_results->next = NULL;
-		ptr->ports_results->scan_result->next = NULL;
-
+		}
 		while (ptr->ports_results->next != NULL)
+		{
+			// if (ptr->ports_results == data_sniffer.port_dst)
+			// {
+			// 	port_find = TRUE;
+			// 	break;
+			// }
 			ptr->ports_results = ptr->ports_results->next;
-
-		ptr->ports_results = (t_port_result*)malloc(sizeof(t_port_result));
-		ptr->ports_results->next = NULL;
-
+		}
 		while (ptr->ports_results->scan_result->next != NULL)
 			ptr->ports_results->scan_result = ptr->ports_results->scan_result->next;
-
-		ptr->ports_results->scan_result = (t_scan_result*)malloc(sizeof(t_scan_result));
-		ptr->ports_results->scan_result->next = NULL;
-
-		// ptr->ports_results = (t_port_result*)malloc(sizeof(t_port_result));
-		// // ptr->ports_results = ptr->ports_results->next;
-		// ptr->ports_results->next = NULL;
-		//
-		// ptr->ports_results->scan_result = (t_scan_result*)malloc(sizeof(t_scan_result));
-		// // ptr->ports_results->scan_result = ptr->ports_results->scan_result->next;
-		// ptr->ports_results->scan_result->next = NULL;
 
 		ptr->ip = ft_strdup(data_sniffer.ip_str);
 		ptr->ports_results->port = data_sniffer.port_dst;
@@ -339,8 +334,16 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, t_th_sniffer data_sn
 		ptr->ports_results->conclusion = TRUE;
 		ptr->ports_results->service_name = nm_get_service_name(data_sniffer.port_dst, (ip->ip_p == IPPROTO_TCP ? "tcp" : "udp"));
 
-		printf("ip: %s, port: %d, result: %d, service_name: %s\n", ptr->ip, ptr->ports_results->port, ptr->ports_results->scan_result->result, ptr->ports_results->service_name);
 
+			ptr->next = (t_store*)malloc(sizeof(t_store));
+			ptr = ptr->next;
+			ptr->next = NULL;
+
+			ptr->ports_results = (t_port_result*)malloc(sizeof(t_port_result));
+			ptr->ports_results->next = NULL;
+
+		ptr->ports_results->scan_result = (t_scan_result*)malloc(sizeof(t_scan_result));
+		ptr->ports_results->scan_result->next = NULL;
 
 	pthread_mutex_unlock(&g_struct.store_mutex);
 
