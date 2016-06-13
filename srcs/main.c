@@ -47,42 +47,24 @@ void 							nm_display()
 	printf("%-15s %-20s %-10s %-55s %-10s\n","Ip", "Service Name", "Port", "Results", "Conclusion");
 	printf("--------------------------------------------------------------------------------------------------------------------\n");
 	ptr = g_struct.store;
-	// printf("%s\n", ptr->ip);
 	while (ptr->next != NULL)
 	{
-		// port = 0;
-		// while (port < 1025)
-		// {
-		// 	if (port == ptr->ports_results->port)
-		// 	{
-				// if (check_p == 0)
-				while (ptr->ports_results)
-				{
+		port = 0;
+		while (port < 1025)
+		{
+			if (port == ptr->ports_results->port)
+			{
+				if (check_p == 0)
 					printf("%-15s %-20s %-10d ", ptr->ip, ptr->ports_results->service_name, ptr->ports_results->port);
-					nm_display_scan_type(ptr->ports_results->scan_result->type, ptr->ports_results->scan_result->result);
-					ptr->ports_results = ptr->ports_results->next;
-				}
-
-					//
-					// int i = 0;
-					// while (i < 7)
-					// {
-					// 	if (g_struct.types & (1 << i))
-					// 	{
-							// nm_display_scan_type(ptr->ports_results->type, ptr->ports_results->results);
-					// 	}
-					// 	i++;
-					// }
-
-				// if (ptr->ports_results->results & F_RESULT_OPEN)
-				// 	open = 1;
-				// if (check_v == 2)
-				// 	printf("\n%-48s", "");
-				// check_v++;
-				// check_p = 1;
-
-			// port++;
-		// }
+				if (ptr->ports_results->results & F_RESULT_OPEN)
+					open = 1;
+				if (check_v == 2)
+					printf("\n%-48s", "");
+				check_v++;
+				check_p = 1;
+			}
+			port++;
+		}
 		ptr = ptr->next;
 		if (check_p == 1)
 				printf("\n");

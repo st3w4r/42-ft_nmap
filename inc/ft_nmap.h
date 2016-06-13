@@ -86,9 +86,9 @@ typedef struct	s_scan_result
 typedef struct	s_port_result
 {
 	int			port;
-	t_scan_result *scan_result; // Linked list of Scan_result
-	// int			type; // e_scan_types
-	// int			results;
+	// t_scan_result *scan_result; // Linked list of Scan_result
+	int			type; // e_scan_types
+	int			results;
 	t_bool	conclusion;
 	char		*service_name;
 	struct s_port_result *next;
