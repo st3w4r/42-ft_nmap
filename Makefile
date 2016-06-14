@@ -14,10 +14,7 @@ NAME = ft_nmap
 
 CC = clang
 
-CFLAGS = -Wall -Werror -Wextra -lpthread
-# CFLAGS = -Wall -Wextra -lpthread
-
-#CFLAGS = -lpthread
+CFLAGS = -Wall -Werror -Wextra
 
 SRC_PATH = ./srcs/
 
@@ -67,7 +64,7 @@ all: libmake $(NAME)
 
 $(NAME): $(OBJ) $(LIB)
 	@$(COMPILE)
-	@$(CC) $(CFLAGS) -o $(NAME) -I$(INC_PATH) -I$(INC_PATH_LIBFT) \
+	@$(CC) $(CFLAGS) -lpthread -o $(NAME) -I$(INC_PATH) -I$(INC_PATH_LIBFT) \
 		$(LIB) $(OBJ) $(LIB) $(LIB_EXT)
 	@$(COMPILED)
 
