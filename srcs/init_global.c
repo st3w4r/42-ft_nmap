@@ -1,15 +1,5 @@
 #include "ft_nmap.h"
 
-// void printBits(unsigned int num)
-// {
-//    for(int bit=0;bit<(sizeof(unsigned int) * 8); bit++)
-//    {
-//       printf("%i ", num & 0x01);
-//       num = num >> 1;
-//    }
-// 	 printf("\n");
-// }
-
 void nm_g_struct_init_fun(void)
 {
   g_struct.ptr_init_fun[0] = nm_usage;
@@ -39,14 +29,6 @@ void nm_g_struct_init()
 	g_struct.store = NULL;
 	g_struct.store = (t_store*)malloc(sizeof(t_store));
 	g_struct.store->next = NULL;
-	// g_struct.rtt.start = NULL;
-	// g_struct.rtt.end = NULL;
-	// g_struct.store = (t_store*)malloc(sizeof(t_store));
-	// g_struct.store->next = NULL;
-	// g_struct.store->ports_results = (t_port_result*)malloc(sizeof(t_port_result));
-	// g_struct.store->ports_results->next = NULL;
-	// g_struct.store->ports_results->scan_result = (t_scan_result*)malloc(sizeof(t_scan_result));
-	// g_struct.store->ports_results->scan_result->next = NULL;
 	nm_init_speedup_opt("1");
 	nm_init_ports_opt("0-1024");
 	nm_g_struct_init_fun();

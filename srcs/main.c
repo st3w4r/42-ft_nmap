@@ -1,8 +1,5 @@
 #include "ft_nmap.h"
 
-/* Ne pas oublier de remettre les Flags */
-
-
 char *nm_display_scan_result(int result)
 {
 	if (result & F_RESULT_OPEN)
@@ -21,7 +18,6 @@ char *nm_display_scan_result(int result)
 
 void nm_display_scan_type(int type, int result)
 {
-// printf("%-20s", "initialization...");
 	if (type & SYN_F)
 		printf("SYN(%s) ", nm_display_scan_result(result));
 	if (type & ACK_F)

@@ -31,8 +31,6 @@ char		*getIP(char *str)
 
 int nm_init_ip_opt(char *arg)
 {
-	// if (nm_check_ip_v4(arg) == FALSE)
-	// 	return (-1);
 	nm_add_ip_to_ip_store(getIP(arg));
 	return (0);
 }

@@ -22,71 +22,57 @@ enum e_scan_result	nm_detect_scan(
 	// SYN
 	if ((scan_type & SYN_F) && (syn & 0x1 ) && (ack & 0x1))
 	{
-		// printf("--OPEN-- SCAN SYN\n");
 		result = F_RESULT_OPEN;
 	}
 	else if ((scan_type & SYN_F) && (rst & 0x1))
 	{
-		// printf("--CLOSE-- SCAN SYN\n");
 		result = F_RESULT_CLOSE;
 	}
 	else if ((scan_type & SYN_F) && (timeout == TRUE))
 	{
-		// printf("--FILTERED-- SCAN SYN\n");
 		result = F_RESULT_FILTERED;
 	}
 	// NULL
 	else if ((scan_type & NULL_F) && (rst & 0x1))
 	{
-		// printf("--CLOSE-- SCAN NULL\n");
 		result = F_RESULT_CLOSE;
 	}
 	else if ((scan_type & NULL_F) && (timeout == TRUE))
 	{
-		// printf("--OPEN FILTERED-- SCAN NULL\n");
 		result = F_RESULT_OPEN_FILTERED;
 	}
 	// FIN
 	else if ((scan_type & FIN_F) && (rst & 0x1))
 	{
-		// printf("--CLOSE-- SCAN FIN\n");
 		result = F_RESULT_CLOSE;
 	}
 	else if ((scan_type & FIN_F) && (timeout == TRUE))
 	{
-		// printf("--OPEN FILTERED-- SCAN FIN\n");
 		result = F_RESULT_OPEN_FILTERED;
 	}
 	// XMAS
 	else if ((scan_type & XMAS_F) && (rst & 0x1))
 	{
-		// printf("--CLOSE-- SCAN XMAS\n");
 		result = F_RESULT_CLOSE;
 	}
 	else if ((scan_type & XMAS_F) && (timeout == TRUE))
 	{
-		// printf("--OPEN FILTERED-- SCAN XMAS\n");
 		result = F_RESULT_OPEN_FILTERED;
 	}
 	// UDP
 	else if ((scan_type & UDP_F) && (timeout == TRUE))
 	{
-		// printf("--OPEN FILTERED-- SCAN UDP\n");
 		result = F_RESULT_OPEN_FILTERED;
 	}
 	// ACK
 	else if ((scan_type & ACK_F) && (rst & 0x1))
 	{
-		// printf("--UNFILTERED-- SCAN ACK\n");
 		result = F_RESULT_UNFILTERED;
 	}
 	else if ((scan_type & ACK_F) && (timeout == TRUE))
 	{
-		// printf("--FILTERED-- SCAN ACK\n");
 		result = F_RESULT_FILTERED;
 	}
-	// else if (timeout == TRUE)
-	// 	printf("--TIMEOUT--\n");
 
 	return (result);
 }
@@ -104,7 +90,6 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 	(void)h;
 	data_sniffer = (t_th_sniffer *)user;
 	ethernet = (struct ethhdr*)(packet);
-	// printf("Ethernet: %u\n", ethernet->h_proto);
 
 	ip = (struct ip*)(packet + ETH_HLEN);
 
@@ -114,9 +99,6 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 		return ;
 	}
 
-	// printf("IP SRC sniffed: %s\n", inet_ntoa(ip->ip_src));
-	// printf("IP DST sniffed: %s\n", inet_ntoa(ip->ip_dst));
-
 	tcp = (struct tcphdr*)(packet + ETH_HLEN + size_ip);
 
 	size_tcp = tcp->doff * 4;
@@ -125,20 +107,7 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 		return ;
 	}
 	payload = (u_char *)(packet + ETH_HLEN + size_ip + size_tcp);
-	// printf("TCP SRC port: %u ", ntohs(tcp->source));
-	// printf("TCP DST port: %u ", ntohs(tcp->dest));
-	// printf("TCP SEQ: %u ", ntohl(tcp->seq));
-	// printf("TCP ACK: %u ", ntohl(tcp->ack_seq));
-	// printf("FLAGS:\n");
 
-	// (tcp->fin & 0x1) ? printf("FIN on\n") : printf("FIN off\n");
-	// (tcp->syn & 0x1) ? printf("SYN on\n") : printf("SYN off\n");
-	// (tcp->rst & 0x1) ? printf("RST on\n") : printf("RST off\n");
-	// (tcp->psh & 0x1) ? printf("PUSH on\n") : printf("PUSH off\n");
-	// (tcp->ack & 0x1) ? printf("ACK on\n") : printf("ACK off\n");
-	// (tcp->urg & 0x1) ? printf("URG on\n") : printf("URG off\n");
-
-	// printf("DATA SNIFFER: %s\n", data_sniffer->ip_str);
 	data_sniffer->scan_result = nm_detect_scan(data_sniffer->scan_type, FALSE,
 			tcp->urg, tcp->ack, tcp->psh, tcp->rst, tcp->syn, tcp->fin);
 

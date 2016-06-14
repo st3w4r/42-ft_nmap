@@ -46,7 +46,6 @@ struct tcphdr		*nm_configure_packet_tcp(char *buf, unsigned short port_dst,
 	ip = (struct iphdr*)(buf);
 	tcp = (struct tcphdr*)(buf + (ip->ihl * 4));
 
-	// tcp->source = htons(port_src);
 	tcp->source = htons((unsigned short)g_struct.source_port);
 	tcp->dest = htons(port_dst);
 	tcp->doff = sizeof(struct tcphdr) >> 2;
@@ -65,11 +64,7 @@ struct tcphdr		*nm_configure_packet_tcp(char *buf, unsigned short port_dst,
 	tcp->check = 0;
 	tcp->urg_ptr = 0;
 	tcp->check = (nm_pseudo_header_checksum(buf, ip->ihl * 4));
-//	tcp->check = htons(0xdea4);
-/*	printf("%4x\n",(tcp->check));
-	printf("%4x\n",htons(tcp->check));
-	printf("%4x\n",ntohs(tcp->check));
-*/
+
 	return (tcp);
 }
 
@@ -86,6 +81,5 @@ struct udphdr		*nm_configure_packet_udp(char *buf, unsigned short port_dst)
 	udp->len = htons(sizeof(struct udphdr));
 	udp->check = 0;
 	udp->check = nm_pseudo_header_checksum(buf, ip->ihl * 4);
-//	udp->check = htons(0x7c9e);
 	return (udp);
 }
