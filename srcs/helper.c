@@ -97,8 +97,8 @@ void	nm_get_ip_file(char *file)
 	if ((fd = open(file, O_RDONLY)) <= 0)
 		ft_error_str_exit("Error: can't open file\n");
 	while (ft_get_next_line(fd, &line) > 0)
-		if (nm_check_ip_v4(line))
-			nm_add_ip_to_ip_store(line);
+		nm_add_ip_to_ip_store(getIP(line));
+		// if (nm_check_ip_v4(line))
 	close(fd);
 
 	// while (g_struct.ip_store != NULL)

@@ -172,7 +172,7 @@ t_th_sniffer *nm_build_data_sniffer(unsigned short port_dst, int s, char *ip_str
 	data_sniffer->filter_exp = ft_strdup(nm_build_filter(port_dst, ip_str));
 	data_sniffer->ip_str = ip_str;
 	data_sniffer->port_dst = port_dst;
-	data_sniffer->port_src = 4242;
+	data_sniffer->port_src = g_struct.source_port;
 	data_sniffer->seq = 42;
 	data_sniffer->ack_seq = 42;
 	data_sniffer->socket = s;

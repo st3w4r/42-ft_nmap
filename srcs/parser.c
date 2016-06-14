@@ -6,12 +6,27 @@ int             nm_argv_parser(char **argv, int argc)
   int i;
   int opt;
   int argtype;
-
+  int check_ip = 0;
   argtype       = -1;
   opt           = 0;
   i             = 1;
   tabargs       = nm_get_args();
 
+  while (i < argc)
+  {
+    if (ft_strcmp("--ip", argv[i]) == 0)
+      check_ip = 1;
+    if (ft_strcmp("--file", argv[i]) == 0)
+      check_ip = 1;
+    i++;
+  }
+  if (check_ip == 0)
+  {
+    nm_usage();
+    exit(0);
+  }
+
+  i = 1;
   while (i < argc)
   {
     argtype = nm_arg_type(argv[i]);

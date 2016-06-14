@@ -13,6 +13,11 @@ enum e_scan_result	nm_detect_scan(
 		u_int16_t fin
 		)
 {
+
+	(void)urg;
+	(void)ack;
+	(void)fin;
+	(void)psh;
 	enum e_scan_result result;
 	// SYN
 	if ((scan_type & SYN_F) && (syn & 0x1 ) && (ack & 0x1))
@@ -96,6 +101,7 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 	u_int size_tcp;
 	t_th_sniffer *data_sniffer;
 
+	(void)h;
 	data_sniffer = (t_th_sniffer *)user;
 	ethernet = (struct ethhdr*)(packet);
 	// printf("Ethernet: %u\n", ethernet->h_proto);
@@ -139,7 +145,7 @@ void nm_capture_packet(u_char *user, const struct pcap_pkthdr *h, const u_char *
 }
 
 
-void	 *nm_th_sniffer(void * data)
+void	 nm_th_sniffer(void * data)
 {
 
 	t_th_sniffer data_sniffer = *(t_th_sniffer*)data;
@@ -153,13 +159,12 @@ void	 *nm_th_sniffer(void * data)
 	ft_memset(buf, 0, PACKET_BUF_SIZE);
 	ip = nm_configure_packet_ip(buf, data_sniffer.ip_str, data_sniffer.scan_type);
 	if (data_sniffer.scan_type & UDP_F)
-		udp = nm_configure_packet_udp(buf, data_sniffer.port_src, data_sniffer.port_dst);
+		udp = nm_configure_packet_udp(buf, data_sniffer.port_dst);
 	else
-		tcp = nm_configure_packet_tcp(buf, data_sniffer.port_src, data_sniffer.port_dst
+		tcp = nm_configure_packet_tcp(buf, data_sniffer.port_dst
 			, data_sniffer.seq, data_sniffer.ack_seq, data_sniffer.flags);
 	nm_sniffer(data_sniffer.filter_exp, buf, ip, data_sniffer);
 
-	return (1);
 }
 
 void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, t_th_sniffer data_sniffer)
@@ -170,8 +175,6 @@ void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, t_th_sniffer data_sn
 	struct bpf_program fp;
 	bpf_u_int32 mask;
 	bpf_u_int32 net;
-	struct pcap_pkthdr header;
-	const u_char *packet;
 
 	pthread_mutex_lock(&g_struct.pcap_init_mutex);
 	if (pcap_lookupnet(dev, &net, &mask, errbuf) == -1)

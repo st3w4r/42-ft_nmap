@@ -205,13 +205,11 @@ unsigned short	nm_checksum(unsigned short *data, int len);
  */
 int				nm_open_socket();
 struct ip		*nm_configure_packet_ip(char *buf, char *ip_dst, enum e_scan_types type);
-struct tcphdr	*nm_configure_packet_tcp(char *buf,
-					unsigned short port_src, unsigned short port_dst,
+struct tcphdr	*nm_configure_packet_tcp(char *buf, unsigned short port_dst,
 					u_int seq,
 					u_int ack_seq,
 					u_int flags);
-struct udphdr	*nm_configure_packet_udp(char *buf,
-					unsigned short port_src, unsigned short port_dst);
+struct udphdr	*nm_configure_packet_udp(char *buf, unsigned short port_dst);
 /**
  ** Name: loop.c
  ** Desc: Loop on send and recevive request
@@ -223,7 +221,7 @@ int nm_build_flag(enum e_scan_types type);
  ** Name: sniffer.c
  ** Desc: Sniff the network and capture packets
  */
-void	 *nm_th_sniffer(void * data);
+void nm_th_sniffer(void * data);
 void nm_sniffer(char *filter_exp, char *buf, struct ip *ip, t_th_sniffer data_sniffer);
 
 #endif

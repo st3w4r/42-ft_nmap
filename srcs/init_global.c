@@ -39,8 +39,8 @@ void nm_g_struct_init()
 	g_struct.store = NULL;
 	g_struct.store = (t_store*)malloc(sizeof(t_store));
 	g_struct.store->next = NULL;
-	g_struct.rtt.start;
-	g_struct.rtt.end;
+	// g_struct.rtt.start = NULL;
+	// g_struct.rtt.end = NULL;
 	// g_struct.store = (t_store*)malloc(sizeof(t_store));
 	// g_struct.store->next = NULL;
 	// g_struct.store->ports_results = (t_port_result*)malloc(sizeof(t_port_result));

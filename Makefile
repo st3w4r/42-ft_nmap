@@ -14,8 +14,8 @@ NAME = ft_nmap
 
 CC = clang
 
-#CFLAGS = -Wall -Werror -Wextra
-CFLAGS = -Wall -Wextra -lpthread
+CFLAGS = -Wall -Werror -Wextra -lpthread
+# CFLAGS = -Wall -Wextra -lpthread
 
 #CFLAGS = -lpthread
 

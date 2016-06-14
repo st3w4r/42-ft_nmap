@@ -113,7 +113,7 @@ int nm_init_g_opt(char *arg)
   if (!ft_is_number(arg))
     return (-1);
   port = ft_atoi(arg);
-  if (port < 1 || port > 65536)
+  if (port < 1 || port > 65535)
     return (-1);
   else
     g_struct.source_port = port;
